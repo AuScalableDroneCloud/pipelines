@@ -29,26 +29,30 @@ jobs:
         id: meta-pyodm
         uses: docker/metadata-action@8b842e721d38d18bea23b57f4c040e53331f4ca2
         with:
-          images: ${{ env.REGISTRY }}/asdc-pipeline-pyodm
+          images: ${{ env.REGISTRY }}/auscalabledronecloud/asdc-pipeline-pyodm
 
       - name: Build and push pipeline-pyodm image
         uses: docker/build-push-action@1bc1040caef9e604eb543693ba89b5bf4fc80935
         with:
           context: ./pyodm
           push: true
-          tags: ${{ steps.meta-pyodm.outputs.tags }}
+          tags: |
+            ${{ env.REGISTRY }}/auscalabledronecloud/asdc-pipeline-pyodm:latest
+            ${{ steps.meta-pyodm.outputs.tags }}
           labels: ${{ steps.meta-pyodm.outputs.labels }}
 
       - name: Extract metadata for pipeline-fd
         id: meta-fd
         uses: docker/metadata-action@8b842e721d38d18bea23b57f4c040e53331f4ca2
         with:
-          images: ${{ env.REGISTRY }}/asdc-pipeline-fd
+          images: ${{ env.REGISTRY }}/auscalabledronecloud/asdc-pipeline-fd
 
       - name: Build and push pipeline-fd image
         uses: docker/build-push-action@1bc1040caef9e604eb543693ba89b5bf4fc80935
         with:
           context: ./fracture-detection
           push: true
-          tags: ${{ steps.meta-fd.outputs.tags }}
+          tags: |
+            ${{ env.REGISTRY }}/auscalabledronecloud/asdc-pipeline-fd:latest
+            ${{ steps.meta-fd.outputs.tags }}
           labels: ${{ steps.meta-fd.outputs.labels }}          
