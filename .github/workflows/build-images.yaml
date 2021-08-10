@@ -43,6 +43,7 @@ jobs:
           context: ./pyodm
           push: true
           tags: |
+            ${{ env.REGISTRY }}/auscalabledronecloud/asdc-pipeline-fd:latest          
             ${{ steps.meta-pyodm.outputs.tags }}
           labels: ${{ steps.meta-pyodm.outputs.labels }}
 
@@ -64,5 +65,6 @@ jobs:
           context: ./fracture-detection
           push: true
           tags: |
+            ${{ env.REGISTRY }}/auscalabledronecloud/asdc-pipeline-fd:latest
             ${{ steps.meta-fd.outputs.tags }}
           labels: ${{ steps.meta-fd.outputs.labels }}          
