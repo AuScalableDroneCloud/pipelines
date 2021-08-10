@@ -8,7 +8,7 @@ env:
   REGISTRY: ghcr.io
 
 jobs:
-  build-and-push-pyodm:
+  build-and-push-images:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -25,11 +25,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata for pipeline-pyodm
-        id: meta-pyodm
+      - name: Extract metadata for pipeline-base
+        id: meta-base
         uses: docker/metadata-action@8b842e721d38d18bea23b57f4c040e53331f4ca2
         with:
-          images: ${{ env.REGISTRY }}/auscalabledronecloud/asdc-pipeline-pyodm
+          images: ${{ env.REGISTRY }}/auscalabledronecloud/pipeline-base
           tags: |
             type=schedule
             type=ref,event=branch
@@ -37,21 +37,21 @@ jobs:
             type=ref,event=pr
             type=sha
 
-      - name: Build and push pipeline-pyodm image
+      - name: Build and push pipeline-base image
         uses: docker/build-push-action@1bc1040caef9e604eb543693ba89b5bf4fc80935
         with:
-          context: ./pyodm
+          context: ./base
           push: true
           tags: |
-            ${{ env.REGISTRY }}/auscalabledronecloud/asdc-pipeline-fd:latest          
-            ${{ steps.meta-pyodm.outputs.tags }}
-          labels: ${{ steps.meta-pyodm.outputs.labels }}
+            ${{ env.REGISTRY }}/auscalabledronecloud/pipeline-base:latest          
+            ${{ steps.meta-base.outputs.tags }}
+          labels: ${{ steps.meta-base.outputs.labels }}
 
       - name: Extract metadata for pipeline-fd
         id: meta-fd
         uses: docker/metadata-action@8b842e721d38d18bea23b57f4c040e53331f4ca2
         with:
-          images: ${{ env.REGISTRY }}/auscalabledronecloud/asdc-pipeline-fd
+          images: ${{ env.REGISTRY }}/auscalabledronecloud/pipeline-fd
           tags: |
             type=schedule
             type=ref,event=branch
@@ -65,6 +65,6 @@ jobs:
           context: ./fracture-detection
           push: true
           tags: |
-            ${{ env.REGISTRY }}/auscalabledronecloud/asdc-pipeline-fd:latest
+            ${{ env.REGISTRY }}/auscalabledronecloud/pipeline-fd:latest
             ${{ steps.meta-fd.outputs.tags }}
-          labels: ${{ steps.meta-fd.outputs.labels }}          
+          labels: ${{ steps.meta-fd.outputs.labels }}
