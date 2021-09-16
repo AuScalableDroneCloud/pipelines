@@ -6,6 +6,3 @@ FROM jupyter/minimal-notebook:hub-1.4.2
 RUN pip install --quiet --no-cache-dir 'pyodm==1.5.6' 'nbgitpuller' && \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
-
-USER ${NB_UID}
-RUN mamba install --yes --quiet jupyter-server-proxy&& jupyter serverextension enable --sys-prefix --py jupyter_server_proxy
