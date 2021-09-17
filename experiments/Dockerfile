@@ -5,7 +5,9 @@ FROM ghcr.io/auscalabledronecloud/pipeline-base
 #Vis experiments
 USER ${NB_UID}
 
-RUN pip install --yes 'lavavu-osmesa' && mamba install --quiet --yes \
-    'jupyter-server-proxy' && \
-    jupyter labextension install jupyterlab-server-proxy
+RUN pip install --quiet --no-cache-dir 'lavavu-osmesa'
+
+RUN mamba install --quiet --yes 'jupyter-server-proxy'
+
+RUN jupyter labextension install jupyterlab-server-proxy
 
