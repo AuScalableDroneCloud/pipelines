@@ -5,9 +5,5 @@ FROM ghcr.io/auscalabledronecloud/pipeline-base
 #Vis experiments
 USER ${NB_UID}
 
-RUN pip install --quiet --no-cache-dir 'lavavu-osmesa'
-
-RUN pip install --quiet --no-cache-dir 'jupyter-server-proxy'
-
-#RUN mamba install --quiet --yes 'jupyter-server-proxy'
+RUN pip install --quiet --no-cache-dir 'jupyter-server-proxy' 'lavavu-osmesa'
 
