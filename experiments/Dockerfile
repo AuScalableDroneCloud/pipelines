@@ -7,3 +7,4 @@ USER ${NB_UID}
 
 RUN pip install --quiet --no-cache-dir 'jupyter-server-proxy' 'lavavu-osmesa'
 
+RUN pip install --quiet --no-cache-dir git+https://github.com/AuScalableDroneCloud/jupyter_oauth2.git
