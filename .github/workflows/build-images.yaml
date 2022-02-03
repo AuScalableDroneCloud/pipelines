@@ -36,7 +36,7 @@ jobs:
             type=ref,event=branch
             type=ref,event=tag
             type=ref,event=pr
-            type=sha
+            ${{ env.IMAGE }}:${{ github.sha }}-${{ github.run_number }}
 
       - name: Build and push pipeline-base image
         uses: docker/build-push-action@1bc1040caef9e604eb543693ba89b5bf4fc80935
@@ -58,7 +58,7 @@ jobs:
             type=ref,event=branch
             type=ref,event=tag
             type=ref,event=pr
-            type=sha
+            ${{ env.IMAGE }}:${{ github.sha }}-${{ github.run_number }}
 
       - name: Build and push pipeline-fd image
         uses: docker/build-push-action@1bc1040caef9e604eb543693ba89b5bf4fc80935
@@ -80,7 +80,7 @@ jobs:
             type=ref,event=branch
             type=ref,event=tag
             type=ref,event=pr
-            type=sha
+            ${{ env.IMAGE }}:${{ github.sha }}-${{ github.run_number }}
 
       - name: Build and push pipeline-exp image
         uses: docker/build-push-action@1bc1040caef9e604eb543693ba89b5bf4fc80935
