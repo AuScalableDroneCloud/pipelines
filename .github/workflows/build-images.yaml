@@ -19,6 +19,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Add SHORT_SHA env property with commit short sha
+        run: echo "SHORT_SHA=`git rev-parse --short HEAD`" >> $GITHUB_ENV
+
       - name: Log in to the Container registry
         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
         with:
@@ -36,7 +39,7 @@ jobs:
             type=ref,event=branch
             type=ref,event=tag
             type=ref,event=pr
-            ${{ env.IMAGE }}:${{ github.sha }}-${{ github.run_number }}
+            ${{ env.SHORT_SHA }}-${{ github.run_number }}
 
       - name: Build and push pipeline-base image
         uses: docker/build-push-action@1bc1040caef9e604eb543693ba89b5bf4fc80935
@@ -58,7 +61,7 @@ jobs:
             type=ref,event=branch
             type=ref,event=tag
             type=ref,event=pr
-            ${{ env.IMAGE }}:${{ github.sha }}-${{ github.run_number }}
+            ${{ env.SHORT_SHA }}-${{ github.run_number }}
 
       - name: Build and push pipeline-fd image
         uses: docker/build-push-action@1bc1040caef9e604eb543693ba89b5bf4fc80935
@@ -80,7 +83,7 @@ jobs:
             type=ref,event=branch
             type=ref,event=tag
             type=ref,event=pr
-            ${{ env.IMAGE }}:${{ github.sha }}-${{ github.run_number }}
+            ${{ env.SHORT_SHA }}-${{ github.run_number }}
 
       - name: Build and push pipeline-exp image
         uses: docker/build-push-action@1bc1040caef9e604eb543693ba89b5bf4fc80935
