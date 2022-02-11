@@ -3,7 +3,7 @@
 FROM jupyter/minimal-notebook:hub-2.1.1
 
 # Install nbgitpuller and pyodm
-RUN pip install --quiet --no-cache-dir 'pyodm==1.5.9' 'nbgitpuller' 'git+https://github.com/AuScalableDroneCloud/jupyter_oauth2.git' && \
+RUN pip install --quiet --no-cache-dir 'pyodm==1.5.9' 'nbgitpuller' 'git+https://github.com/AuScalableDroneCloud/jupyter_oauth2.git' 'qrcode' && \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
 
