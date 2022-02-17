@@ -5,5 +5,18 @@ FROM ghcr.io/auscalabledronecloud/pipeline-base
 #Vis experiments
 USER ${NB_UID}
 
-RUN pip install --quiet --no-cache-dir 'lavavu-osmesa'
+# Install python packages
+RUN pip install --quiet --no-cache-dir \
+        GEOS \
+        ODMax \
+        python-dotenv \
+        lavavu-osmesa
+
+# Hack odk2odm to work with our tokens
+RUN git clone https://github.com/localdevices/odk2odm.git && \
+    sed -i 's/JWT {}/Bearer {}/g' odk2odm/odk2odm/odm_requests.py && \
+    pip install ./odk2odm
+
+#Install conda packages
+RUN conda install -y -c conda-forge cartopy
 
