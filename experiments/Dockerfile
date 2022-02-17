@@ -2,7 +2,6 @@
 # jupyterhub we expect to deploy into.
 FROM ghcr.io/auscalabledronecloud/pipeline-base
 
-#Vis experiments
 USER ${NB_UID}
 
 # Install python packages

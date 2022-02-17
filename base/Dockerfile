@@ -15,6 +15,7 @@ USER ${NB_UID}
 RUN pip install --quiet --no-cache-dir \
         matplotlib \
         scipy \
+        ipywidgets \
         pyodm==1.5.9 \
         nbgitpuller \
         git+https://github.com/AuScalableDroneCloud/jupyter_oauth2.git && \
