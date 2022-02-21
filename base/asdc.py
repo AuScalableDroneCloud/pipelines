@@ -26,7 +26,7 @@ import jupyter_oauth2_api as auth
 
 import os
 # load .env if vars not already in env
-if not JUPYTER_OAUTH2_CLIENT_ID in os.environ:
+if not "JUPYTER_OAUTH2_CLIENT_ID" in os.environ:
     from dotenv import load_dotenv
     load_dotenv()
 
