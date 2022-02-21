@@ -23,6 +23,13 @@ import jupyter_oauth2_api as auth
 # JUPYTER_OAUTH2_CLIENT_ID
 # JUPYTER_OAUTH2_SCOPE
 # JUPYTER_OAUTH2_AUTH_PROVIDER_URL
+
+import os
+# load .env if vars not already in env
+if not JUPYTER_OAUTH2_CLIENT_ID in os.environ:
+    from dotenv import load_dotenv
+    load_dotenv()
+
 auth.setup()
 
 

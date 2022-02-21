@@ -16,6 +16,7 @@ RUN pip install --quiet --no-cache-dir \
         matplotlib \
         scipy \
         ipywidgets \
+        python-dotenv \
         pyodm==1.5.9 \
         nbgitpuller \
         git+https://github.com/AuScalableDroneCloud/jupyter_oauth2.git && \

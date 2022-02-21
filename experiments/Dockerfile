@@ -8,7 +8,6 @@ USER ${NB_UID}
 RUN pip install --quiet --no-cache-dir \
         GEOS \
         ODMax \
-        python-dotenv \
         lavavu-osmesa
 
 # Hack odk2odm to work with our tokens
