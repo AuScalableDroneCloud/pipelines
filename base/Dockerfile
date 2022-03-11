@@ -29,5 +29,5 @@ COPY asdc.py /opt/conda/lib/python3.9/site-packages
 
 #Setup conda env
 RUN conda init bash && \
-    conda install -y -n notebook_env nb_conda_kernels
+    conda install -y -n base nb_conda_kernels
 
