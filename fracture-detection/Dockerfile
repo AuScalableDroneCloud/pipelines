@@ -4,7 +4,7 @@ USER ${NB_UID}
 
 # Install python packages
 RUN pip install --quiet --no-cache-dir \
-        opencv-python
+        opencv-python \
         PyCoShREM
 
 #Install conda packages
