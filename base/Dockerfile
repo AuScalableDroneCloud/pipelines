@@ -7,6 +7,7 @@ USER root
 # Install system packages
 RUN apt-get update -qq && \
     DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
+        libgl1 \
         exiftool
 
 USER ${NB_UID}
