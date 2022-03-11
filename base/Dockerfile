@@ -28,6 +28,5 @@ RUN pip install --quiet --no-cache-dir \
 COPY asdc.py /opt/conda/lib/python3.9/site-packages
 
 #Setup conda env
-RUN conda init bash && \
-    conda install -y -n base nb_conda_kernels
+RUN conda init bash && conda activate base
 
