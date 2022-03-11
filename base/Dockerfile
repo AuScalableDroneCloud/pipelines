@@ -27,3 +27,7 @@ RUN pip install --quiet --no-cache-dir \
 # Install api module until in own repo with setup.py
 COPY asdc.py /opt/conda/lib/python3.9/site-packages
 
+#Setup conda env
+RUN conda init bash && \
+    conda install -y -n notebook_env nb_conda_kernels
+
