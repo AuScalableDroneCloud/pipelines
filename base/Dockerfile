@@ -27,6 +27,3 @@ RUN pip install --quiet --no-cache-dir \
 # Install api module until in own repo with setup.py
 COPY asdc.py /opt/conda/lib/python3.9/site-packages
 
-#Setup conda env
-RUN source /opt/conda/etc/profile.d/conda.sh && conda init bash && conda activate base
-

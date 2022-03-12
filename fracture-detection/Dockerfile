@@ -11,6 +11,9 @@ RUN pip install --quiet --no-cache-dir \
 #Install conda packages
 RUN conda install -y -c conda-forge gdal
 
+#Fix for gdal error
+env PROJ_LIB "/opt/conda/share/proj"
+
 # Make sure we have the latest fracture detection code
 #(now in pipelines-jupyter)
 
