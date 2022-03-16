@@ -14,16 +14,13 @@ USER ${NB_UID}
 
 # Install python packages
 RUN pip install --quiet --no-cache-dir \
-        matplotlib \
-        scipy \
-        ipywidgets \
-        python-dotenv \
-        pyodm==1.5.9 \
         nbgitpuller \
-        git+https://github.com/AuScalableDroneCloud/jupyter_oauth2.git && \
         fix-permissions "${CONDA_DIR}" && \
         fix-permissions "/home/${NB_USER}"
 
 # Install api module until in own repo with setup.py
 COPY asdc.py /opt/conda/lib/python3.9/site-packages
+
+#Add to python path for our api modules
+ENV PYTHONPATH "${PYTHONPATH}:/home/jovyan/asdc"
 

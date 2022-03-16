@@ -2,12 +2,6 @@ FROM ghcr.io/auscalabledronecloud/pipeline-base
 
 USER ${NB_UID}
 
-# Install python packages
-RUN pip install --quiet --no-cache-dir \
-        opencv-contrib-python-headless \
-        PyCoShREM
-        #opencv-python \
-
 #Install conda packages
 RUN conda install -y -c conda-forge gdal
 

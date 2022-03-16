@@ -2,12 +2,6 @@ FROM ghcr.io/auscalabledronecloud/pipeline-base
 
 USER ${NB_UID}
 
-# Install python packages
-RUN pip install --quiet --no-cache-dir \
-        GEOS \
-        ODMax \
-        lavavu-osmesa
-
 # Hack odk2odm to work with our tokens
 RUN git clone https://github.com/localdevices/odk2odm.git && \
     sed -i 's/JWT {}/Bearer {}/g' odk2odm/odk2odm/odm_requests.py && \
