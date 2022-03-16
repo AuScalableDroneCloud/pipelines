@@ -14,6 +14,13 @@ USER ${NB_UID}
 
 # Install python packages
 RUN pip install --quiet --no-cache-dir \
+        matplotlib \
+        scipy \
+        ipywidgets \
+        ipyfilechooser \
+        git+https://github.com/AuScalableDroneCloud/jupyter_oauth2.git \
+        python-dotenv \
+        pyodm==1.5.9 \
         nbgitpuller && \
         fix-permissions "${CONDA_DIR}" && \
         fix-permissions "/home/${NB_USER}"
