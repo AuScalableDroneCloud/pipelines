@@ -18,9 +18,6 @@ RUN pip install --quiet --no-cache-dir \
         fix-permissions "${CONDA_DIR}" && \
         fix-permissions "/home/${NB_USER}"
 
-# Install api module until in own repo with setup.py
-COPY asdc.py /opt/conda/lib/python3.9/site-packages
-
 #Add to python path for our api modules
 ENV PYTHONPATH "${PYTHONPATH}:/home/jovyan/asdc"
 
