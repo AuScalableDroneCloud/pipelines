@@ -21,10 +21,12 @@ RUN pip install --quiet --no-cache-dir \
         git+https://github.com/AuScalableDroneCloud/jupyter_oauth2.git \
         python-dotenv \
         pyodm==1.5.9 \
-        opencv-contrib-python-headless \
         nbgitpuller && \
         fix-permissions "${CONDA_DIR}" && \
         fix-permissions "/home/${NB_USER}"
+
+#Install conda packages
+RUN conda install -y -c conda-forge cartopy libopencv opencv py-opencv
 
 #Add to python path for our api modules
 ENV PYTHONPATH "${PYTHONPATH}:/home/jovyan/asdc"
