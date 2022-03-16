@@ -14,7 +14,7 @@ USER ${NB_UID}
 
 # Install python packages
 RUN pip install --quiet --no-cache-dir \
-        nbgitpuller \
+        nbgitpuller && \
         fix-permissions "${CONDA_DIR}" && \
         fix-permissions "/home/${NB_USER}"
 
