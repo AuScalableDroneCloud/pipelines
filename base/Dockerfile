@@ -21,6 +21,7 @@ RUN pip install --quiet --no-cache-dir \
         voila \
         jupytext \
         jupyter-http-over-ws \
+        jupyter-resource-usage \
         git+https://github.com/AuScalableDroneCloud/jupyter_oauth2.git \
         python-dotenv \
         pyodm==1.5.9 \
