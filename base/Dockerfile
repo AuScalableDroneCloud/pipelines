@@ -23,7 +23,6 @@ RUN pip install --quiet --no-cache-dir \
         jupyter-http-over-ws \
         jupyter-resource-usage \
         git+https://github.com/AuScalableDroneCloud/jupyter_oauth2.git \
-        git+https://github.com/localdevices/odk2odm.git \
         python-dotenv \
         pyodm==1.5.9 \
         nbgitpuller && \
