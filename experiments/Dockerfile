@@ -35,6 +35,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxrandr-dev \
     python3 \
     python3-distutils \
+    gfortan \
     wget && \
     rm -rf /var/lib/apt/lists/*
 
@@ -131,9 +132,4 @@ USER ${NB_UID}
 RUN git clone https://github.com/localdevices/odk2odm.git && \
     sed -i 's/JWT {}/Bearer {}/g' odk2odm/odk2odm/odm_requests.py && \
     pip install ./odk2odm
-
-# Root painter - AI testing
-RUN git clone https://github.com/Abe404/root_painter.git && \
-    cd root_painter/trainer && \
-    pip install -r requirements.txt
 
