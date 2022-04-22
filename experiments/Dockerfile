@@ -112,7 +112,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 #COPY --from=base /usr/local/include/vulkan /usr/local/include/vulkan
 #COPY --from=base /usr/local/share/vulkan /usr/local/share/vulkan
 
-#COPY nvidia_icd.json /etc/vulkan/icd.d/nvidia_icd.json
+COPY nvidia_icd.json /etc/vulkan/icd.d/nvidia_icd.json
 
 #################################################################################################
 
@@ -132,4 +132,8 @@ RUN git clone https://github.com/localdevices/odk2odm.git && \
     sed -i 's/JWT {}/Bearer {}/g' odk2odm/odk2odm/odm_requests.py && \
     pip install ./odk2odm
 
+# Root painter - AI testing
+RUN git clone https://github.com/Abe404/root_painter.git && \
+    cd root_painter/trainer && \
+    pip install -r requirements.txt
 
