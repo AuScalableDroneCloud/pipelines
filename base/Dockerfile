@@ -32,6 +32,9 @@ RUN pip install --quiet --no-cache-dir \
 #Install conda packages
 RUN conda install -y -c conda-forge cartopy libopencv opencv py-opencv
 
+#Try this to fix numpy error
+RUN rm -rf /opt/conda/lib/python3.9/site-packages/numpy-1.22.3.dist-info
+
 #Add to python path for our api modules
 ENV PYTHONPATH "${PYTHONPATH}:/home/jovyan/asdc"
 
