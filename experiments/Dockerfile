@@ -35,7 +35,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxrandr-dev \
     python3 \
     python3-distutils \
-    gfortan \
     wget && \
     rm -rf /var/lib/apt/lists/*
 
