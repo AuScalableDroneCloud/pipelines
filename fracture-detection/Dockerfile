@@ -11,3 +11,7 @@ env PROJ_LIB "/opt/conda/share/proj"
 # Make sure we have the latest fracture detection code
 #(now in pipelines-jupyter)
 
+# Install python packages
+RUN pip install --quiet --no-cache-dir \
+        PyCoShREM
+
