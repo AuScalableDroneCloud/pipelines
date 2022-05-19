@@ -54,6 +54,9 @@ COPY nvidia_icd.json /etc/vulkan/icd.d/nvidia_icd.json
 
 USER ${NB_UID}
 
+#Jupytext default editor fix
+COPY plugin.jupyterlab-settings /home/jovyan/.jupyter/lab/user-settings/@jupyterlab/docmanager-extension/plugin.jupyterlab-settings
+
 # Install python packages
 RUN pip install --quiet --no-cache-dir \
         matplotlib \
