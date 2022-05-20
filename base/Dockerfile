@@ -64,8 +64,12 @@ RUN pip install --quiet --no-cache-dir \
         jupytext \
         jupyter-http-over-ws \
         jupyter-resource-usage \
-        git+https://github.com/AuScalableDroneCloud/jupyter_oauth2.git@asdc \
         python-dotenv \
+        tqdm \
+        jupyter-server-proxy \
+        pillow \
+        qrcode \
+        git+https://github.com/AuScalableDroneCloud/asdc_python \
         pyodm==1.5.9 \
         rasterio \
         rasterstats \
