@@ -8,9 +8,9 @@ USER root
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ENV NVIDIA_REQUIRE_CUDA "cuda>=11.4 brand=tesla,driver>=418,driver<419 brand=tesla,driver>=440,driver<441 brand=tesla,driver>=450,driver<451 brand=tesla,driver>=460,driver<461"
-ENV NV_CUDA_CUDART_VERSION 11.4.108-1
-ENV NV_CUDA_COMPAT_PACKAGE cuda-compat-11-4
-ENV CUDA_VERSION 11.4.2
+#Versions in https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/Packages
+ENV CUDA_VERSION 11.4
+ENV CUDNN_VERSION=8.2.4.15
 
 # Install system packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -20,8 +20,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 RUN apt-get update -qq && \
     apt-get install -yq --no-install-recommends \
-      cuda-cudart-11-4=${NV_CUDA_CUDART_VERSION} \
-      ${NV_CUDA_COMPAT_PACKAGE} \
+      cuda-libraries-${CUDA_VERSION} \
+      cuda-compat-${CUDA_VERSION} \
+      libcudnn8=${CUDNN_VERSION}-1+cuda${CUDA_VERSION} \
       libgl1 \
       exiftool \
       build-essential \
