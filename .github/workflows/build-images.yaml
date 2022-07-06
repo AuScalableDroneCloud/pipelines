@@ -8,7 +8,8 @@ on:
     types: [published]
 
 jobs:
-  build-and-push-images:
+  push_to_registry:
+    name: Build and push Docker image to GitHub Packages
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
