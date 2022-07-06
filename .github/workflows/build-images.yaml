@@ -9,7 +9,6 @@ on:
 
 jobs:
   build-and-push-images:
-    name: Build and push Docker image to GitHub Packages
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
