@@ -3,94 +3,106 @@ name: Create and publish Docker images
 on:
   workflow_dispatch:
   push:
-    branches: ['master']
-
-env:
-  REGISTRY: ghcr.io
+    branches: [master]
+  release:
+    types: [published]
 
 jobs:
   build-and-push-images:
+    name: Build and push Docker image to GitHub Packages
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
 
       - name: Add SHORT_SHA env property with commit short sha
         run: echo "SHORT_SHA=`git rev-parse --short HEAD`" >> $GITHUB_ENV
 
-      - name: Log in to the Container registry
-        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+     - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
         with:
-          registry: ${{ env.REGISTRY }}
+          registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract metadata for pipeline-base
         id: meta-base
-        uses: docker/metadata-action@8b842e721d38d18bea23b57f4c040e53331f4ca2
+        uses: docker/metadata-action@v3
         with:
-          images: ${{ env.REGISTRY }}/auscalabledronecloud/pipeline-base
+          # list of Docker images to use as base name for tags
+          images: |
+            ghcr.io/auscalabledronecloud/pipeline-base
           tags: |
             type=schedule
             type=ref,event=branch
             type=ref,event=tag
             type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha
             ${{ env.SHORT_SHA }}-${{ github.run_number }}
 
       - name: Build and push pipeline-base image
-        uses: docker/build-push-action@1bc1040caef9e604eb543693ba89b5bf4fc80935
+        uses: docker/build-push-action@v2
         with:
           context: ./base
           push: true
           tags: |
-            ${{ env.REGISTRY }}/auscalabledronecloud/pipeline-base:latest          
+            ghcr.io/auscalabledronecloud/pipeline-base:latest
             ${{ steps.meta-base.outputs.tags }}
           labels: ${{ steps.meta-base.outputs.labels }}
 
       - name: Extract metadata for pipeline-fd
         id: meta-fd
-        uses: docker/metadata-action@8b842e721d38d18bea23b57f4c040e53331f4ca2
+        uses: docker/metadata-action@v3
         with:
-          images: ${{ env.REGISTRY }}/auscalabledronecloud/pipeline-fd
+          images: ghcr.io/auscalabledronecloud/pipeline-fd
           tags: |
             type=schedule
             type=ref,event=branch
             type=ref,event=tag
             type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha
             ${{ env.SHORT_SHA }}-${{ github.run_number }}
 
       - name: Build and push pipeline-fd image
-        uses: docker/build-push-action@1bc1040caef9e604eb543693ba89b5bf4fc80935
+        uses: docker/build-push-action@v2
         with:
           context: ./fracture-detection
           push: true
           tags: |
-            ${{ env.REGISTRY }}/auscalabledronecloud/pipeline-fd:latest
+            ghcr.io/auscalabledronecloud/pipeline-fd:latest
             ${{ steps.meta-fd.outputs.tags }}
           labels: ${{ steps.meta-fd.outputs.labels }}
 
       - name: Extract metadata for pipeline-exp
         id: meta-exp
-        uses: docker/metadata-action@8b842e721d38d18bea23b57f4c040e53331f4ca2
+        uses: docker/metadata-action@v3
         with:
-          images: ${{ env.REGISTRY }}/auscalabledronecloud/pipeline-exp
+          images: ghcr.io/auscalabledronecloud/pipeline-exp
           tags: |
             type=schedule
             type=ref,event=branch
             type=ref,event=tag
             type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha
             ${{ env.SHORT_SHA }}-${{ github.run_number }}
 
       - name: Build and push pipeline-exp image
-        uses: docker/build-push-action@1bc1040caef9e604eb543693ba89b5bf4fc80935
+        uses: docker/build-push-action@v2
         with:
           context: ./experiments
           push: true
           tags: |
-            ${{ env.REGISTRY }}/auscalabledronecloud/pipeline-exp:latest
+            ghcr.io/auscalabledronecloud/pipeline-exp:latest
             ${{ steps.meta-exp.outputs.tags }}
           labels: ${{ steps.meta-exp.outputs.labels }}
