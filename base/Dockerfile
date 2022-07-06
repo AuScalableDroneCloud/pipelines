@@ -15,13 +15,14 @@ ENV CUDNN_VERSION=8.2.4.15
 # Install system packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gnupg2 ca-certificates && \
-    sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/3bf863cc.pub && \
+    apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/3bf863cc.pub && \
     echo "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64 /" > /etc/apt/sources.list.d/cuda.list
 
 RUN apt-get update -qq && \
     apt-get install -yq --no-install-recommends \
       cuda-libraries-${CUDA_VERSION} \
       cuda-compat-${CUDA_VERSION} \
+      cuda-toolkit-${CUDA_VERSION} \
       libcudnn8=${CUDNN_VERSION}-1+cuda${CUDA_VERSION} \
       libgl1 \
       exiftool \
@@ -81,8 +82,8 @@ RUN pip install --quiet --no-cache-dir \
 #Install conda packages
 RUN conda install -y -c conda-forge cartopy libopencv opencv py-opencv
 
-#Try this to fix numpy error
-RUN rm -rf /opt/conda/lib/python3.9/site-packages/numpy-1.22.3.dist-info
+#Fix numpy conflict
+RUN rm -rf /opt/conda/lib/python3.9/site-packages/numpy-1.22.*.dist-info
 
 #Add to python path for our api modules
 ENV PYTHONPATH "${PYTHONPATH}:/home/jovyan/asdc"
