@@ -20,7 +20,7 @@ jobs:
       - name: Add SHORT_SHA env property with commit short sha
         run: echo "SHORT_SHA=`git rev-parse --short HEAD`" >> $GITHUB_ENV
 
-     - name: Set up Docker Buildx
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
       - name: Login to GitHub Container Registry
