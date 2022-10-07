@@ -83,7 +83,7 @@ RUN pip install --quiet --no-cache-dir \
 RUN conda install -y -c conda-forge cartopy libopencv opencv py-opencv
 
 #Fix numpy conflict
-RUN rm -rf /opt/conda/lib/python3.9/site-packages/numpy-1.22.*.dist-info
+RUN rm -rf /opt/conda/lib/python3.9/site-packages/numpy-1.2?.*.dist-info
 
 #Add to python path for our api modules
 ENV PYTHONPATH "${PYTHONPATH}:/home/jovyan/asdc"
