@@ -1,6 +1,6 @@
 # Start from a core-stack notebook, preferably matching the version of 
 # jupyterhub we expect to deploy into.
-FROM jupyter/minimal-notebook:hub-2.1.1
+FROM jupyter/minimal-notebook:hub-3.0.0
 
 LABEL maintainer "ASDC <owen.kaluza@monash.edu>"
 
