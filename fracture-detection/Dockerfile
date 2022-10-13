@@ -1,4 +1,5 @@
-FROM ghcr.io/auscalabledronecloud/pipeline-base
+ARG BASE_CONTAINER=ghcr.io/auscalabledronecloud/pipeline-base
+FROM $BASE_CONTAINER
 
 USER ${NB_UID}
 

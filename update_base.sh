@@ -10,7 +10,10 @@ wget https://raw.githubusercontent.com/jupyter/docker-stacks/main/base-notebook/
 wget https://raw.githubusercontent.com/jupyter/docker-stacks/main/base-notebook/start-singleuser.sh -O start-singleuser.sh
 wget https://raw.githubusercontent.com/jupyter/docker-stacks/main/base-notebook/start.sh -O start.sh
 
-docker build -t base-notebook --build-arg ROOT_CONTAINER=nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04 -f Dockerfile .
+#NOTE: cudann8 vs bare 11.8.0-runtime-ubuntu22.04 is ~500GB larger
+#docker build -t base-notebook --build-arg ROOT_CONTAINER=nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04 -f Dockerfile .
+#NOTE: pytorch requires 11.6 for stable, 11.7 for nightly currently
+docker build -t base-notebook --build-arg ROOT_CONTAINER=nvidia/cuda:11.6.0-cudnn8-runtime-ubuntu22.04 -f Dockerfile .
 cd ..
 
 mkdir -p minimal-notebook
@@ -26,4 +29,10 @@ docker build -t pipeline-base --build-arg BASE_CONTAINER=minimal-notebook -f Doc
 
 #TEST
 #docker run -p 8888:8888 pipeline-base
+
+cd ../experiments
+docker build -t pipeline-exp --build-arg BASE_CONTAINER=pipeline-base -f Dockerfile .
+
+#TEST
+#docker run -p 8888:8888 pipeline-exp
 

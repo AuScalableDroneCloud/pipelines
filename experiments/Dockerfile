@@ -1,4 +1,5 @@
-FROM ghcr.io/auscalabledronecloud/pipeline-base
+ARG BASE_CONTAINER=ghcr.io/auscalabledronecloud/pipeline-base
+FROM $BASE_CONTAINER
 
 USER root
 
@@ -20,15 +21,9 @@ RUN git clone https://github.com/localdevices/odk2odm.git && \
     sed -i 's/JWT {}/Bearer {}/g' odk2odm/odk2odm/odm_requests.py && \
     pip install  --quiet --no-cache-dir ./odk2odm
 
-# Install torch etc
+# Install torch etc and additional packages for ODMax
 RUN pip install --quiet --no-cache-dir \
-        torch==1.9.0+cu111 \
-        torchvision==0.10.0+cu111 \
-        torchaudio==0.9.0 \
-        -f https://download.pytorch.org/whl/torch_stable.html
-
-#Additional packages for ODMax
-RUN pip install --quiet --no-cache-dir \
+        torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116 \
         GEOS \
         ODMax
 
