@@ -22,8 +22,8 @@ RUN git clone https://github.com/localdevices/odk2odm.git && \
     pip install  --quiet --no-cache-dir ./odk2odm
 
 # Install torch etc and additional packages for ODMax
-RUN pip install --quiet --no-cache-dir \
-        torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116 \
+RUN pip install --quiet --no-cache-dir --pre \
+        torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/nightly/cu117 \
         GEOS \
         ODMax
 

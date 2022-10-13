@@ -12,8 +12,8 @@ wget https://raw.githubusercontent.com/jupyter/docker-stacks/main/base-notebook/
 
 #NOTE: cudann8 vs bare 11.8.0-runtime-ubuntu22.04 is ~500GB larger
 #docker build -t base-notebook --build-arg ROOT_CONTAINER=nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04 -f Dockerfile .
-#NOTE: pytorch requires 11.6 for stable, 11.7 for nightly currently
-docker build -t base-notebook --build-arg ROOT_CONTAINER=nvidia/cuda:11.6.0-cudnn8-runtime-ubuntu22.04 -f Dockerfile .
+#NOTE: pytorch requires 11.6 for stable, 11.7 for nightly currently, only 11.7 has 22.04 build
+docker build -t base-notebook --build-arg ROOT_CONTAINER=nvidia/cuda:11.7.0-cudnn8-runtime-ubuntu22.04 -f Dockerfile .
 cd ..
 
 mkdir -p minimal-notebook

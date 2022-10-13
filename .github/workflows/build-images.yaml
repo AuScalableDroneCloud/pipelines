@@ -37,7 +37,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           build-args: |
-            ROOT_CONTAINER=nvidia/cuda:11.6.0-cudnn8-runtime-ubuntu22.04
+            ROOT_CONTAINER=nvidia/cuda:11.7.0-cudnn8-runtime-ubuntu22.04
             #ROOT_CONTAINER=nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04
           context: ./base-notebook
           push: false
