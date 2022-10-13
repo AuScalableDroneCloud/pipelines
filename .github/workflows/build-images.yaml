@@ -38,6 +38,8 @@ jobs:
             ROOT_CONTAINER=nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04
           context: ./base-notebook
           push: false
+          load: true
+          tags: base-notebook
 
       - name: Build minimal-notebook image
         uses: docker/build-push-action@v2
@@ -46,6 +48,8 @@ jobs:
             BASE_CONTAINER=base-notebook
           context: ./minimal-notebook
           push: false
+          load: true
+          tags: minimal-notebook
 
       # Published pipeline images
       - name: Extract metadata for pipeline-base
