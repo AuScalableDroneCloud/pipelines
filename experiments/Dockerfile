@@ -1,7 +1,6 @@
 ARG BASE_CONTAINER=ghcr.io/auscalabledronecloud/pipeline-base
 FROM $BASE_CONTAINER
 
-USER root
 
 LABEL maintainer "ASDC <owen.kaluza@monash.edu>"
 
@@ -21,9 +20,14 @@ RUN git clone https://github.com/localdevices/odk2odm.git && \
     sed -i 's/JWT {}/Bearer {}/g' odk2odm/odk2odm/odm_requests.py && \
     pip install  --quiet --no-cache-dir ./odk2odm
 
+#ARG TORCH_CUDA=117 #Requires updated driver
+ARG TORCH_CUDA=113
+
+USER root
 # Install torch etc and additional packages for ODMax
 RUN pip install --quiet --no-cache-dir --pre \
-        torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/nightly/cu117 \
+        torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/nightly/cu${TORCH_CUDA} \
         GEOS \
         ODMax
+
 

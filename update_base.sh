@@ -10,10 +10,17 @@ wget https://raw.githubusercontent.com/jupyter/docker-stacks/main/base-notebook/
 wget https://raw.githubusercontent.com/jupyter/docker-stacks/main/base-notebook/start-singleuser.sh -O start-singleuser.sh
 wget https://raw.githubusercontent.com/jupyter/docker-stacks/main/base-notebook/start.sh -O start.sh
 
-#NOTE: cudann8 vs bare 11.8.0-runtime-ubuntu22.04 is ~500GB larger
-#docker build -t base-notebook --build-arg ROOT_CONTAINER=nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04 -f Dockerfile .
+#https://hub.docker.com/r/nvidia/cuda/
+#These require a newer driver
 #NOTE: pytorch requires 11.6 for stable, 11.7 for nightly currently, only 11.7 has 22.04 build
-docker build -t base-notebook --build-arg ROOT_CONTAINER=nvidia/cuda:11.7.0-cudnn8-runtime-ubuntu22.04 -f Dockerfile .
+#NOTE: cudann8 vs bare 11.8.0-runtime-ubuntu22.04 is ~500GB larger
+#CUDA_IMAGE=cuda:11.8.0-cudnn8-runtime-ubuntu22.04
+#CUDA_IMAGE=cuda:11.7.0-cudnn8-runtime-ubuntu22.04
+CUDA_IMAGE=cuda:11.2.2-cudnn8-runtime-ubuntu20.04
+
+sed -i "s/ROOT_CONTAINER=nvidia.*/ROOT_CONTAINER=nvidia\/${CUDA_IMAGE}/g" .github/workflows/build-images.yaml
+
+docker build -t base-notebook --build-arg ROOT_CONTAINER=nvidia/${CUDA_IMAGE} -f Dockerfile .
 cd ..
 
 mkdir -p minimal-notebook
