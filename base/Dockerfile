@@ -32,6 +32,9 @@ RUN conda install -y -c conda-forge cartopy libopencv opencv py-opencv
 #Add to python path for our api modules
 ENV PYTHONPATH "${PYTHONPATH}:/home/jovyan/asdc"
 
+# Fix the cuda version check error
+ENV NVIDIA_DISABLE_REQUIRE "1"
+
 #Fix permissions
 USER root
 RUN chmod +x /usr/local/bin/start*.sh
