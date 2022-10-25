@@ -9,6 +9,7 @@ RUN pip install --quiet --no-cache-dir \
         scipy \
         ipywidgets \
         ipyfilechooser \
+        ipylab \
         voila \
         jupytext \
         jupyter-http-over-ws \
