@@ -52,6 +52,7 @@ jobs:
           tags: minimal-notebook
 
       # Published pipeline images
+      # CPU ONLY IMAGE - based on default jupyterhub docker stacks
       - name: Extract metadata for pipeline-base
         id: meta-base
         uses: docker/metadata-action@v3
@@ -72,8 +73,6 @@ jobs:
       - name: Build and push pipeline-base image
         uses: docker/build-push-action@v2
         with:
-          build-args: |
-            BASE_CONTAINER=minimal-notebook
           context: ./base
           push: true
           tags: |
@@ -81,11 +80,13 @@ jobs:
             ${{ steps.meta-base.outputs.tags }}
           labels: ${{ steps.meta-base.outputs.labels }}
 
-      - name: Extract metadata for pipeline-fd
-        id: meta-fd
+      - name: Extract metadata for pipeline-gpu
+        id: meta-gpu
         uses: docker/metadata-action@v3
         with:
-          images: ghcr.io/auscalabledronecloud/pipeline-fd
+          # list of Docker images to use as base name for tags
+          images: |
+            ghcr.io/auscalabledronecloud/pipeline-gpu
           tags: |
             type=schedule
             type=ref,event=branch
@@ -96,21 +97,23 @@ jobs:
             type=sha
             ${{ env.SHORT_SHA }}-${{ github.run_number }}
 
-      - name: Build and push pipeline-fd image
+      - name: Build and push pipeline-gpu image
         uses: docker/build-push-action@v2
         with:
-          context: ./fracture-detection
+          build-args: |
+            BASE_CONTAINER=minimal-notebook
+          context: ./base
           push: true
           tags: |
-            ghcr.io/auscalabledronecloud/pipeline-fd:latest
-            ${{ steps.meta-fd.outputs.tags }}
-          labels: ${{ steps.meta-fd.outputs.labels }}
+            ghcr.io/auscalabledronecloud/pipeline-gpu:latest
+            ${{ steps.meta-base.outputs.tags }}
+          labels: ${{ steps.meta-base.outputs.labels }}
 
-      - name: Extract metadata for pipeline-exp
-        id: meta-exp
+      - name: Extract metadata for pipeline-ml
+        id: meta-ml
         uses: docker/metadata-action@v3
         with:
-          images: ghcr.io/auscalabledronecloud/pipeline-exp
+          images: ghcr.io/auscalabledronecloud/pipeline-ml
           tags: |
             type=schedule
             type=ref,event=branch
@@ -121,12 +124,12 @@ jobs:
             type=sha
             ${{ env.SHORT_SHA }}-${{ github.run_number }}
 
-      - name: Build and push pipeline-exp image
+      - name: Build and push pipeline-ml image
         uses: docker/build-push-action@v2
         with:
-          context: ./experiments
+          context: ./ml
           push: true
           tags: |
-            ghcr.io/auscalabledronecloud/pipeline-exp:latest
-            ${{ steps.meta-exp.outputs.tags }}
-          labels: ${{ steps.meta-exp.outputs.labels }}
+            ghcr.io/auscalabledronecloud/pipeline-ml:latest
+            ${{ steps.meta-ml.outputs.tags }}
+          labels: ${{ steps.meta-ml.outputs.labels }}
