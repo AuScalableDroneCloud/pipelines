@@ -106,7 +106,7 @@ jobs:
           push: true
           tags: |
             ghcr.io/auscalabledronecloud/pipeline-gpu:latest
-            ${{ steps.meta-base.outputs.tags }}
+            ${{ steps.meta-gpu.outputs.tags }}
           labels: ${{ steps.meta-base.outputs.labels }}
 
       - name: Extract metadata for pipeline-ml
