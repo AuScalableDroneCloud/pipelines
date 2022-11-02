@@ -14,6 +14,7 @@ RUN pip install --quiet --no-cache-dir \
         jupytext \
         jupyter-http-over-ws \
         jupyter-resource-usage \
+        jupyterlab-system-monitor \
         python-dotenv \
         tqdm \
         jupyter-server-proxy \
@@ -38,7 +39,7 @@ RUN git clone https://github.com/localdevices/odk2odm.git && \
 RUN conda install -y -c conda-forge cartopy libopencv opencv py-opencv gdal
 
 #Fix for gdal error
-env PROJ_LIB "/opt/conda/share/proj"
+ENV PROJ_LIB "/opt/conda/share/proj"
 
 #Add to python path for our api modules
 ENV PYTHONPATH "${PYTHONPATH}:/home/jovyan/asdc"
