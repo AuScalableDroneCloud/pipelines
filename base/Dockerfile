@@ -6,6 +6,7 @@ USER ${NB_UID}
 # Install python packages
 #(NOTE: opencv is CPU only - will need to build our own to use GPU)
 RUN pip install --quiet --no-cache-dir \
+        opencv-contrib-python-headless \
         matplotlib \
         scipy \
         ipywidgets \
@@ -20,14 +21,12 @@ RUN pip install --quiet --no-cache-dir \
         tqdm \
         jupyter-server-proxy \
         pillow \
-        opencv-contrib-python-headless \
         qrcode \
         git+https://github.com/AuScalableDroneCloud/asdc_python \
         pyodm==1.5.9 \
         rasterio \
         rasterstats \
         GEOS \
-        ODMax \
         nbgitpuller && \
         fix-permissions "${CONDA_DIR}" && \
         fix-permissions "/home/${NB_USER}"
@@ -36,6 +35,12 @@ RUN pip install --quiet --no-cache-dir \
 RUN git clone https://github.com/localdevices/odk2odm.git && \
     sed -i 's/JWT {}/Bearer {}/g' odk2odm/odk2odm/odm_requests.py && \
     pip install  --quiet --no-cache-dir ./odk2odm
+
+# Hack odmax to use our opencv package
+RUN git clone https://github.com/localdevices/odmax.git && \
+    sed -i 's/opencv-python-headless==4.5.4.60/opencv-contrib-python-headless/g' odmax/requirements.txt && \
+    sed -i 's/opencv-python/opencv-contrib-python/g' odmax/setup.py && \
+    pip install  --quiet --no-cache-dir ./odmax
 
 #Install conda packages
 RUN conda install -y -c conda-forge cartopy gdal
