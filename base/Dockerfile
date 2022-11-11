@@ -4,6 +4,7 @@ FROM $BASE_CONTAINER
 USER ${NB_UID}
 
 # Install python packages
+#(NOTE: opencv is CPU only - will need to build our own to use GPU)
 RUN pip install --quiet --no-cache-dir \
         matplotlib \
         scipy \
@@ -19,6 +20,7 @@ RUN pip install --quiet --no-cache-dir \
         tqdm \
         jupyter-server-proxy \
         pillow \
+        opencv-contrib-python-headless \
         qrcode \
         git+https://github.com/AuScalableDroneCloud/asdc_python \
         pyodm==1.5.9 \
@@ -36,7 +38,7 @@ RUN git clone https://github.com/localdevices/odk2odm.git && \
     pip install  --quiet --no-cache-dir ./odk2odm
 
 #Install conda packages
-RUN conda install -y -c conda-forge cartopy libopencv opencv py-opencv gdal
+RUN conda install -y -c conda-forge cartopy gdal
 
 #Fix for gdal error
 ENV PROJ_LIB "/opt/conda/share/proj"
