@@ -54,5 +54,13 @@ ENV PYTHONPATH "${PYTHONPATH}:/home/jovyan/asdc"
 #Fix permissions
 USER root
 RUN chmod +x /usr/local/bin/start*.sh
+
+# Install exiftool
+# https://odmax.readthedocs.io/en/latest/installation.html
+RUN apt-get update --yes && \
+    apt-get install --yes --no-install-recommends \
+    libimage-exiftool-perl && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
 USER ${NB_UID}
 
