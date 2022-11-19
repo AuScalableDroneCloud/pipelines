@@ -37,7 +37,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           build-args: |
-            ROOT_CONTAINER=nvidia/cuda:11.2.2-cudnn8-runtime-ubuntu20.04
+            ROOT_CONTAINER=nvidia/cuda:11.7.1-cudnn8-runtime-ubuntu22.04
           context: ./base-notebook
           push: false
           tags: base-notebook
@@ -124,12 +124,12 @@ jobs:
             type=sha
             ${{ env.SHORT_SHA }}-${{ github.run_number }}
 
-      - name: Build and push pipeline-ml image
-        uses: docker/build-push-action@v2
-        with:
-          context: ./ml
-          push: true
-          tags: |
-            ghcr.io/auscalabledronecloud/pipeline-ml:latest
-            ${{ steps.meta-ml.outputs.tags }}
-          labels: ${{ steps.meta-ml.outputs.labels }}
+      #- name: Build and push pipeline-ml image
+      #  uses: docker/build-push-action@v2
+      #  with:
+      #    context: ./ml
+      #    push: true
+      #    tags: |
+      #      ghcr.io/auscalabledronecloud/pipeline-ml:latest
+      #      ${{ steps.meta-ml.outputs.tags }}
+      #    labels: ${{ steps.meta-ml.outputs.labels }}
