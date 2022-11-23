@@ -14,8 +14,8 @@ LABEL maintainer "ASDC <owen.kaluza@monash.edu>"
 
 USER ${NB_UID}
 
-ARG TORCH_CUDA=117 #Requires updated driver
-#ARG TORCH_CUDA=113
+#ARG TORCH_CUDA=117 #Requires updated driver
+ARG TORCH_CUDA=113
 
 USER root
 # Install torch etc and additional packages for ODMax

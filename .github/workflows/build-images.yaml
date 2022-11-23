@@ -17,6 +17,10 @@ jobs:
         with:
           submodules: 'recursive'
 
+      - name: update-base
+        run: ./update_base.sh
+        shell: bash
+
       - name: Add SHORT_SHA env property with commit short sha
         run: echo "SHORT_SHA=`git rev-parse --short HEAD`" >> $GITHUB_ENV
 
@@ -33,11 +37,20 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       # Intermediate images used as base images
+      - name: Build docker-stacks-foundation image
+        uses: docker/build-push-action@v2
+        with:
+          build-args: |
+            ROOT_CONTAINER=nvidia/cuda:11.2.2-cudnn8-runtime-ubuntu20.04
+          context: ./docker-stacks-foundation
+          push: false
+          tags: docker-stacks-foundation
+
       - name: Build base-notebook image
         uses: docker/build-push-action@v2
         with:
           build-args: |
-            ROOT_CONTAINER=nvidia/cuda:11.7.1-cudnn8-runtime-ubuntu22.04
+            BASE_CONTAINER=docker-stacks-foundation
           context: ./base-notebook
           push: false
           tags: base-notebook
@@ -124,12 +137,12 @@ jobs:
             type=sha
             ${{ env.SHORT_SHA }}-${{ github.run_number }}
 
-      #- name: Build and push pipeline-ml image
-      #  uses: docker/build-push-action@v2
-      #  with:
-      #    context: ./ml
-      #    push: true
-      #    tags: |
-      #      ghcr.io/auscalabledronecloud/pipeline-ml:latest
-      #      ${{ steps.meta-ml.outputs.tags }}
-      #    labels: ${{ steps.meta-ml.outputs.labels }}
+      - name: Build and push pipeline-ml image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./ml
+          push: true
+          tags: |
+            ghcr.io/auscalabledronecloud/pipeline-ml:latest
+            ${{ steps.meta-ml.outputs.tags }}
+          labels: ${{ steps.meta-ml.outputs.labels }}
