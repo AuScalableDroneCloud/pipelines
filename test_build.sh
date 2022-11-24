@@ -12,7 +12,7 @@ CUDA_IMAGE=cuda:11.2.2-cudnn8-runtime-ubuntu20.04
 sed -i "s/ROOT_CONTAINER=nvidia.*/ROOT_CONTAINER=nvidia\/${CUDA_IMAGE}/g" .github/workflows/build-images.yaml
 
 ROOT=nvidia/${CUDA_IMAGE}
-ROOT=ubuntu:20.04
+#ROOT=ubuntu:20.04
 
 cd docker-stacks-foundation
 docker build -t docker-stacks-foundation --build-arg ROOT_CONTAINER=${ROOT} -f Dockerfile .
