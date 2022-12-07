@@ -16,10 +16,8 @@ USER ${NB_UID}
 
 # Install python packages
 #(NOTE: opencv is CPU only - will need to build our own to use GPU)
-#setuptools==58 pin is fix for gdal install error on Ubuntu 20.04, remove for 22.04
-#https://github.com/pypa/setuptools/issues/2781
+#Ensure numpy is installed first for gdal
 RUN pip install --quiet --no-cache-dir \
-        setuptools==58.0.0 \
         numpy
 
 RUN pip install --quiet --no-cache-dir \

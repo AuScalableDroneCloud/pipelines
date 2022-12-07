@@ -6,8 +6,8 @@
 #NOTE: pytorch requires 11.6 for stable, 11.7 for nightly currently, only 11.7 has 22.04 build
 #NOTE: cudann8 vs bare 11.8.0-runtime-ubuntu22.04 is ~500GB larger
 #CUDA_IMAGE=cuda:11.8.0-cudnn8-runtime-ubuntu22.04
-#CUDA_IMAGE=cuda:11.7.0-cudnn8-runtime-ubuntu22.04
-CUDA_IMAGE=cuda:11.2.2-cudnn8-runtime-ubuntu20.04
+CUDA_IMAGE=cuda:11.7.0-cudnn8-runtime-ubuntu22.04
+#CUDA_IMAGE=cuda:11.2.2-cudnn8-runtime-ubuntu20.04
 
 sed -i "s/ROOT_CONTAINER=nvidia.*/ROOT_CONTAINER=nvidia\/${CUDA_IMAGE}/g" .github/workflows/build-images.yaml
 
