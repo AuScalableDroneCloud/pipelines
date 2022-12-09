@@ -1,4 +1,4 @@
-ARG BASE_CONTAINER=ghcr.io/auscalabledronecloud/pipeline-base
+ARG BASE_CONTAINER=ghcr.io/auscalabledronecloud/pipeline-gpu
 FROM $BASE_CONTAINER
 
 LABEL maintainer "ASDC <owen.kaluza@monash.edu>"
