@@ -44,7 +44,7 @@ RUN pip install --quiet --no-cache-dir \
         cartopy \
         gdal==`gdal-config --version` \
         git+https://github.com/AuScalableDroneCloud/asdc_python \
-        git+https://github.com/AuScalableDroneCloud/nbgitpuller \
+        git+https://github.com/AuScalableDroneCloud/nbgitpuller && \
         fix-permissions "${CONDA_DIR}" && \
         fix-permissions "/home/${NB_USER}"
 
