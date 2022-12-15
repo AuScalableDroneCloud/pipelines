@@ -37,14 +37,14 @@ RUN pip install --quiet --no-cache-dir \
         jupyter-server-proxy \
         pillow \
         qrcode \
-        git+https://github.com/AuScalableDroneCloud/asdc_python \
         pyodm==1.5.9 \
         rasterio \
         rasterstats \
         GEOS \
         cartopy \
         gdal==`gdal-config --version` \
-        nbgitpuller && \
+        git+https://github.com/AuScalableDroneCloud/asdc_python \
+        git+https://github.com/AuScalableDroneCloud/nbgitpuller \
         fix-permissions "${CONDA_DIR}" && \
         fix-permissions "/home/${NB_USER}"
 
