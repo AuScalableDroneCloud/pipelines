@@ -15,49 +15,27 @@ RUN apt-get update --yes && \
 USER ${NB_UID}
 
 # Install python packages
+# (We may want to build requirements in a builder image and use wheels to install in final image,
+#  see: https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/main/images/singleuser-sample/Dockerfile)
 #(NOTE: opencv is CPU only - will need to build our own to use GPU)
+COPY requirements.txt requirements.txt
 #Ensure numpy is installed first for gdal
-RUN pip install --quiet --no-cache-dir \
-        numpy
+RUN export GDAL_VERSION=$(gdal-config --version) && \
+    pip install --no-cache-dir numpy && \
+    pip install --no-cache-dir -r requirements.txt
 
-RUN pip install --quiet --no-cache-dir \
-        opencv-contrib-python-headless \
-        matplotlib \
-        scipy \
-        ipywidgets \
-        ipyfilechooser \
-        ipylab \
-        voila \
-        jupytext \
-        jupyter-http-over-ws \
-        jupyter-resource-usage \
-        jupyterlab-system-monitor \
-        python-dotenv \
-        tqdm \
-        jupyter-server-proxy \
-        pillow \
-        qrcode \
-        pyodm==1.5.9 \
-        rasterio \
-        rasterstats \
-        GEOS \
-        cartopy \
-        gdal==`gdal-config --version` \
-        git+https://github.com/AuScalableDroneCloud/asdc_python \
-        git+https://github.com/AuScalableDroneCloud/nbgitpuller && \
-        fix-permissions "${CONDA_DIR}" && \
-        fix-permissions "/home/${NB_USER}"
+# Create a python 3.8 environment and repeat package installations
+RUN conda create --yes -n Python3.8 python=3.8 && \
+    source activate Python3.8 && \
+    export GDAL_VERSION=$(gdal-config --version) && \
+    pip install --no-cache-dir numpy && \
+    pip install --no-cache-dir -r requirements.txt && \
+    python -m ipykernel install --user --name=Python3.8
 
-# Hack odk2odm to work with our tokens
-RUN git clone https://github.com/localdevices/odk2odm.git && \
-    sed -i 's/JWT {}/Bearer {}/g' odk2odm/odk2odm/odm_requests.py && \
-    pip install  --quiet --no-cache-dir ./odk2odm
+USER root
 
-# Use our updated odmax
-RUN git clone https://github.com/auscalabledronecloud/odmax.git && \
-    pip install  --quiet --no-cache-dir ./odmax
+RUN fix-permissions "${CONDA_DIR}" && \
+    fix-permissions "/home/${NB_USER}"
 
-#Add to python path for our api modules
-ENV PYTHONPATH "${PYTHONPATH}:/home/jovyan/asdc"
-
+USER ${NB_UID}
 
