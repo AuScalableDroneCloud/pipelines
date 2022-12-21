@@ -10,6 +10,7 @@ jupytext
 jupyter-http-over-ws
 jupyter-resource-usage
 jupyterlab-system-monitor
+jupyterlab-git
 python-dotenv
 tqdm
 jupyter-server-proxy

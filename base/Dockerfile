@@ -24,13 +24,16 @@ RUN export GDAL_VERSION=$(gdal-config --version) && \
     pip install --no-cache-dir numpy && \
     pip install --no-cache-dir -r requirements.txt
 
+#https://github.com/Anaconda-Platform/nb_conda_kernels
+RUN conda install --yes -n base nb_conda_kernels
+
 # Create a python 3.8 environment and repeat package installations
 RUN conda create --yes -n Python3.8 python=3.8 && \
     source activate Python3.8 && \
     export GDAL_VERSION=$(gdal-config --version) && \
     pip install --no-cache-dir numpy && \
     pip install --no-cache-dir -r requirements.txt && \
-    python -m ipykernel install --user --name=Python3.8
+    #python -m ipykernel install --user --name=python38 --display-name "Python 3.8"
 
 USER root
 
