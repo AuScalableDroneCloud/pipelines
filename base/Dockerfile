@@ -18,9 +18,10 @@ USER ${NB_UID}
 # (We may want to build requirements in a builder image and use wheels to install in final image,
 #  see: https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/main/images/singleuser-sample/Dockerfile)
 #(NOTE: opencv is CPU only - will need to build our own to use GPU)
-COPY requirements.txt requirements.txt
+COPY --chown=jovyan:users requirements.txt requirements.txt
 #Ensure numpy is installed first for gdal
 RUN export GDAL_VERSION=$(gdal-config --version) && \
+    source activate base && \
     pip install --no-cache-dir numpy && \
     pip install --no-cache-dir -r requirements.txt
 
@@ -33,13 +34,10 @@ RUN conda create --yes -n Python3.8 python=3.8 && \
     export GDAL_VERSION=$(gdal-config --version) && \
     pip install --no-cache-dir numpy && \
     pip install --no-cache-dir -r requirements.txt && \
-    conda deactivate
-    #python -m ipykernel install --user --name=python38 --display-name "Python 3.8"
+    conda deactivate && \
+    rm requirements.txt
 
-USER root
-
-RUN fix-permissions "${CONDA_DIR}" && \
-    fix-permissions "/home/${NB_USER}"
-
-USER ${NB_UID}
+# Make RUN commands use the base environment:
+SHELL ["conda", "run", "-n", "base", "/bin/bash", "-c"]
+ENV CONDA_DEFAULT_ENV base
 
