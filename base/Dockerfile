@@ -32,7 +32,8 @@ RUN conda create --yes -n Python3.8 python=3.8 && \
     source activate Python3.8 && \
     export GDAL_VERSION=$(gdal-config --version) && \
     pip install --no-cache-dir numpy && \
-    pip install --no-cache-dir -r requirements.txt
+    pip install --no-cache-dir -r requirements.txt && \
+    conda deactivate
     #python -m ipykernel install --user --name=python38 --display-name "Python 3.8"
 
 USER root
