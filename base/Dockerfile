@@ -1,9 +1,12 @@
 ARG BASE_CONTAINER=jupyter/minimal-notebook:hub-3.0.0
 FROM $BASE_CONTAINER
 
+#Fix permissions
+USER root
+RUN chmod +x /usr/local/bin/start*.sh
+
 # Install library deps for pip packages
 # https://odmax.readthedocs.io/en/latest/installation.html
-USER root
 RUN apt-get update --yes && \
     apt-get install --yes --no-install-recommends \
     libimage-exiftool-perl libgeos-dev libgdal-dev gdal-bin build-essential && \
@@ -35,13 +38,4 @@ RUN conda create --yes -n Python3.8 python=3.8 && \
     rm requirements.txt
 
 ENV CONDA_DEFAULT_ENV base
-
-COPY start-notebook-asdc.sh /usr/local/bin/
-
-#Fix permissions
-USER root
-RUN chmod +x /usr/local/bin/start*.sh
-USER ${NB_UID}
-
-CMD ["start-notebook-asdc.sh"]
 
