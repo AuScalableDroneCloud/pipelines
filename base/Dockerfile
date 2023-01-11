@@ -3,6 +3,7 @@ FROM $BASE_CONTAINER
 
 # Install library deps for pip packages
 # https://odmax.readthedocs.io/en/latest/installation.html
+USER root
 RUN apt-get update --yes && \
     apt-get install --yes --no-install-recommends \
     libimage-exiftool-perl libgeos-dev libgdal-dev gdal-bin build-essential && \
