@@ -18,24 +18,29 @@ USER ${NB_UID}
 # (We may want to build requirements in a builder image and use wheels to install in final image,
 #  see: https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/main/images/singleuser-sample/Dockerfile)
 #(NOTE: opencv is CPU only - will need to build our own to use GPU)
-COPY --chown=jovyan:users requirements.txt requirements.txt
+#COPY --chown=jovyan:users requirements.txt requirements.txt
+COPY --chown=jovyan:users environment.yml environment.yml
 #Ensure numpy is installed first for gdal
 RUN export GDAL_VERSION=$(gdal-config --version) && \
     source activate base && \
-    pip install --no-cache-dir numpy && \
-    pip install --no-cache-dir -r requirements.txt
+    sed -i "s/GDAL_VERSION/$GDAL_VERSION/g" environment.yml && \
+    mamba env update --file environment.yml 
+#    pip install --no-cache-dir numpy && \
+#    pip install --no-cache-dir -r requirements.txt
 
 #https://github.com/Anaconda-Platform/nb_conda_kernels
-RUN conda install --yes -n base nb_conda_kernels
+#RUN conda install --yes -n base nb_conda_kernels
 
 # Create a python 3.8 environment and repeat package installations
 RUN conda create --yes -n Python3.8 python=3.8 && \
     source activate Python3.8 && \
-    export GDAL_VERSION=$(gdal-config --version) && \
-    pip install --no-cache-dir numpy && \
-    pip install --no-cache-dir -r requirements.txt && \
-    conda deactivate && \
-    rm requirements.txt
+    mamba env update --file environment.yml && \
+    #export GDAL_VERSION=$(gdal-config --version) && \
+    #pip install --no-cache-dir numpy && \
+    #pip install --no-cache-dir -r requirements.txt && \
+    conda deactivate
+    #rm requirements.txt
+    #rm environment.yml
 
 ENV CONDA_DEFAULT_ENV base
 

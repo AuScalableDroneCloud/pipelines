@@ -14,10 +14,12 @@ LABEL maintainer "ASDC <owen.kaluza@monash.edu>"
 
 USER ${NB_UID}
 
-ARG TORCH_CUDA=117
+#ARG TORCH_CUDA=117
+ARG TORCH_CUDA=11.7
 
 USER root
-# Install torch etc and additional packages for ODMax
-RUN pip install --quiet --no-cache-dir --pre \
-        torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/nightly/cu${TORCH_CUDA}
+# Install torch 
+#RUN pip install --quiet --no-cache-dir --pre \
+#        torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/nightly/cu${TORCH_CUDA}
 
+RUN mamba install -y pytorch torchvision torchaudio pytorch-cuda=${TORCH_CUDA} -c pytorch -c nvidia
