@@ -3,26 +3,25 @@ channels:
   - conda-forge
 dependencies:
   - pip
-  - numpy
-  - matplotlib
-  - scipy
-  - ipykernel
-  - ipywidgets
-  - ipyfilechooser
-  - ipylab
-  - voila
-  - jupytext
-  - jupyter_http_over_ws
-  - jupyter-resource-usage
-  - jupyterlab-system-monitor
-  - jupyterlab-git
   - nb_conda_kernels
-  - python-dotenv
-  - tqdm
-  - jupyter-server-proxy
-  - pillow
-  - qrcode
   - pip:
+    - numpy
+    - matplotlib
+    - scipy
+    - ipywidgets
+    - ipyfilechooser
+    - ipylab
+    - voila
+    - jupytext
+    - jupyter_http_over_ws
+    - jupyter-resource-usage
+    - jupyterlab-system-monitor
+    - jupyterlab-git
+    - python-dotenv
+    - tqdm
+    - jupyter-server-proxy
+    - pillow
+    - qrcode
     - pyodm==1.5.9
     - rasterio
     - rasterstats
