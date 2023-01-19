@@ -3,9 +3,9 @@ channels:
   - conda-forge
 dependencies:
   - pip
+  - numpy
   - nb_conda_kernels
   - pip:
-    - numpy
     - matplotlib
     - scipy
     - ipywidgets
