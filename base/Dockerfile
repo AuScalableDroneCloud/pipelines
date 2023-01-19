@@ -20,6 +20,7 @@ USER ${NB_UID}
 #(NOTE: opencv is CPU only - will need to build our own to use GPU)
 #COPY --chown=jovyan:users requirements.txt requirements.txt
 COPY --chown=jovyan:users environment.yml environment.yml
+
 #Ensure numpy is installed first for gdal
 RUN export GDAL_VERSION=$(gdal-config --version) && \
     source activate base && \
@@ -27,9 +28,6 @@ RUN export GDAL_VERSION=$(gdal-config --version) && \
     mamba env update --file environment.yml 
 #    pip install --no-cache-dir numpy && \
 #    pip install --no-cache-dir -r requirements.txt
-
-#https://github.com/Anaconda-Platform/nb_conda_kernels
-#RUN conda install --yes -n base nb_conda_kernels
 
 # Create a python 3.8 environment and repeat package installations
 RUN conda create --yes -n Python3.8 python=3.8 && \
@@ -41,6 +39,9 @@ RUN conda create --yes -n Python3.8 python=3.8 && \
     conda deactivate
     #rm requirements.txt
     #rm environment.yml
+
+#https://github.com/Anaconda-Platform/nb_conda_kernels
+RUN conda install --yes -n base nb_conda_kernels
 
 ENV CONDA_DEFAULT_ENV base
 

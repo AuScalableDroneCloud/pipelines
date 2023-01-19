@@ -16,7 +16,6 @@ dependencies:
   - jupyter-resource-usage
   - jupyterlab-system-monitor
   - jupyterlab-git
-  - nb_conda_kernels
   - python-dotenv
   - tqdm
   - jupyter-server-proxy
