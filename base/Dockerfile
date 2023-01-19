@@ -31,17 +31,10 @@ RUN export GDAL_VERSION=$(gdal-config --version) && \
 
 # Create a python 3.8 environment and repeat package installations
 RUN conda create --yes -n Python3.8 python=3.8 && \
-    source activate Python3.8 && \
-    mamba env update --file environment.yml && \
-    #export GDAL_VERSION=$(gdal-config --version) && \
-    #pip install --no-cache-dir numpy && \
-    #pip install --no-cache-dir -r requirements.txt && \
-    conda deactivate
-    #rm requirements.txt
-    #rm environment.yml
-
-#https://github.com/Anaconda-Platform/nb_conda_kernels
-RUN conda install --yes -n base nb_conda_kernels
+    mamba env update -n Python3.8 --file environment.yml
+#    export GDAL_VERSION=$(gdal-config --version) && \
+#    pip install --no-cache-dir numpy && \
+#    pip install --no-cache-dir -r requirements.txt && \
 
 ENV CONDA_DEFAULT_ENV base
 
