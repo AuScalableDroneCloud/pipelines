@@ -28,6 +28,8 @@ dependencies:
     - GEOS
     - cartopy
     - opencv-contrib-python-headless
+    - lavavu-osmesa
+    - laspy[lazrs,laszip]
     - gdal==GDAL_VERSION
     - git+https://github.com/AuScalableDroneCloud/asdc_python
     - git+https://github.com/AuScalableDroneCloud/nbgitpuller
