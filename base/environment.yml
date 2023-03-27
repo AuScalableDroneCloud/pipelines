@@ -29,6 +29,7 @@ dependencies:
     - cartopy
     - opencv-contrib-python-headless
     - lavavu-osmesa
+    - trimesh
     - laspy[lazrs,laszip]
     - gdal==GDAL_VERSION
     - git+https://github.com/AuScalableDroneCloud/asdc_python
