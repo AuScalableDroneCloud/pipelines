@@ -29,6 +29,7 @@ dependencies:
     - cartopy
     - opencv-contrib-python-headless
     - lavavu-osmesa
+    - earthpy
     - trimesh
     - laspy[lazrs,laszip]
     - gdal==GDAL_VERSION
