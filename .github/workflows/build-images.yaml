@@ -12,6 +12,27 @@ jobs:
     name: Build and push Docker image to GitHub Packages
     runs-on: ubuntu-latest
     steps:
+      #https://saturncloud.io/blog/github-action-ecr-optimizing-disk-space/#handling-or-maximizing-github-runner-out-of-disk-space-error
+      # Clean unnecessary files to save disk space
+      - name: clean unncessary files to save space
+        run: |
+          docker rmi `docker images -q`
+          sudo rm -rf /usr/share/dotnet /etc/mysql /etc/php /etc/sudo apt/sources.list.d
+          sudo apt -y autoremove --purge
+          sudo apt -y autoclean
+          sudo apt clean
+          rm --recursive --force "$AGENT_TOOLSDIRECTORY"
+          df -h
+
+      # Free up disk space on Ubuntu
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@main
+        with:
+          # This might remove tools that are actually needed, if set to "true" but frees about 6 GB
+          tool-cache: false
+          large-packages: true
+          swap-storage: true
+
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
@@ -93,3 +114,56 @@ jobs:
             ${{ steps.meta-base.outputs.tags }}
           labels: ${{ steps.meta-base.outputs.labels }}
 
+      - name: Extract metadata for pipeline-gpu
+        id: meta-gpu
+        uses: docker/metadata-action@v3
+        with:
+          # list of Docker images to use as base name for tags
+          images: |
+            ghcr.io/auscalabledronecloud/pipeline-gpu
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=tag
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha
+            ${{ env.SHORT_SHA }}-${{ github.run_number }}
+
+      - name: Build and push pipeline-gpu image
+        uses: docker/build-push-action@v2
+        with:
+          build-args: |
+            BASE_CONTAINER=minimal-notebook
+          context: ./base
+          push: true
+          tags: |
+            ghcr.io/auscalabledronecloud/pipeline-gpu:latest
+            ${{ steps.meta-gpu.outputs.tags }}
+          labels: ${{ steps.meta-base.outputs.labels }}
+
+      - name: Extract metadata for pipeline-ml
+        id: meta-ml
+        uses: docker/metadata-action@v3
+        with:
+          images: ghcr.io/auscalabledronecloud/pipeline-ml
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=tag
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha
+            ${{ env.SHORT_SHA }}-${{ github.run_number }}
+
+      - name: Build and push pipeline-ml image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./ml
+          push: true
+          tags: |
+            ghcr.io/auscalabledronecloud/pipeline-ml:latest
+            ${{ steps.meta-ml.outputs.tags }}
+          labels: ${{ steps.meta-ml.outputs.labels }}
