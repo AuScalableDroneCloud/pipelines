@@ -1,6 +1,6 @@
 #!/bin/bash
 #Get the jupyter/docker-stacks files
-SRC=https://raw.githubusercontent.com/jupyter/docker-stacks/main/
+SRC=https://raw.githubusercontent.com/jupyter/docker-stacks/main/images/
 #SRC=https://raw.githubusercontent.com/AuScalableDroneCloud/docker-stacks/main/
 
 rm -rf docker-stacks-foundation
