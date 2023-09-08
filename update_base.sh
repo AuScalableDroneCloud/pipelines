@@ -9,7 +9,7 @@ mkdir -p docker-stacks-foundation
 wget ${SRC}docker-stacks-foundation/Dockerfile -O docker-stacks-foundation/Dockerfile
 wget ${SRC}docker-stacks-foundation/fix-permissions -O docker-stacks-foundation/fix-permissions
 wget ${SRC}docker-stacks-foundation/initial-condarc -O docker-stacks-foundation/initial-condarc
-wget ${SRC}docker-stacks-foundation/start.sh -O docker-stacks-foundation/run-hooks.sh
+wget ${SRC}docker-stacks-foundation/run_hooks.sh -O docker-stacks-foundation/run-hooks.sh
 wget ${SRC}docker-stacks-foundation/start.sh -O docker-stacks-foundation/start.sh
 
 rm -rf base-notebook
