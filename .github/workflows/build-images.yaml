@@ -41,7 +41,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           build-args: |
-            ROOT_CONTAINER=nvidia/cuda:11.7.0-cudnn8-runtime-ubuntu22.04
+            ROOT_CONTAINER=nvidia/cuda:11.7.1-cudnn8-runtime-ubuntu22.04
           context: ./docker-stacks-foundation
           push: false
           tags: docker-stacks-foundation
