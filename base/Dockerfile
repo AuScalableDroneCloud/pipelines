@@ -33,5 +33,9 @@ RUN export GDAL_VERSION=$(gdal-config --version) && \
 RUN conda create --yes -n Python3.8 python=3.8 && \
     mamba env update -n Python3.8 --file environment.yml
 
+# Create a python 3.9 environment and repeat package installations
+RUN conda create --yes -n Python3.9 python=3.9 && \
+    mamba env update -n Python3.9 --file environment.yml
+
 ENV CONDA_DEFAULT_ENV base
 
