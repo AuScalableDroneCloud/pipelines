@@ -21,8 +21,10 @@ wget ${SRC}base-notebook/start-notebook.sh -O base-notebook/start-notebook.sh
 wget ${SRC}base-notebook/start-singleuser.sh -O base-notebook/start-singleuser.sh
 
 rm -rf minimal-notebook
-mkdir -p minimal-notebook
+mkdir -p minimal-notebook/setup-scripts
 wget ${SRC}minimal-notebook/Dockerfile -O minimal-notebook/Dockerfile
 wget ${SRC}minimal-notebook/Rprofile.site -O minimal-notebook/Rprofile.site
+wget ${SRC}minimal-notebook/setup-scripts/setup-julia-packages.bash -O minimal-notebook/setup-scripts/setup-julia-packages.bash
+wget ${SRC}minimal-notebook/setup-scripts/setup-julia.bash -O minimal-notebook/setup-scripts/setup-julia.bash
 
 
