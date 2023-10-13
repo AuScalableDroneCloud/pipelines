@@ -7,33 +7,33 @@ dependencies:
   - nb_conda_kernels
   - pip:
     - matplotlib
-    - scipy
+    #- scipy
     - ipywidgets
     - ipyfilechooser
     - ipylab
-    - voila
+    #- voila
     - jupytext
     - jupyter_http_over_ws
     - jupyter-resource-usage
     - jupyterlab-system-monitor
     - jupyterlab-git
-    - python-dotenv
-    - tqdm
+    #- python-dotenv
+    #- tqdm
     - jupyter-server-proxy
-    - pillow
-    - qrcode
-    - pyodm==1.5.9
-    - rasterio
-    - rasterstats
-    - GEOS
-    - cartopy
-    - opencv-contrib-python-headless
+    #- pillow
+    #- qrcode
+    #- pyodm==1.5.9
+    #- rasterio
+    #- rasterstats
+    #- GEOS
+    #- cartopy
+    #- opencv-contrib-python-headless
     - lavavu-osmesa
     - earthpy
     - trimesh
     - laspy[lazrs,laszip]
-    - gdal==GDAL_VERSION
+    #- gdal==GDAL_VERSION
     - git+https://github.com/AuScalableDroneCloud/asdc_python
-    - git+https://github.com/AuScalableDroneCloud/nbgitpuller
-    - git+https://github.com/AuScalableDroneCloud/odk2odm
-    - git+https://github.com/AuScalableDroneCloud/odmax
+    #- git+https://github.com/AuScalableDroneCloud/nbgitpuller
+    #- git+https://github.com/AuScalableDroneCloud/odk2odm
+    #- git+https://github.com/AuScalableDroneCloud/odmax
