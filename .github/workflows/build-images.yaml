@@ -89,7 +89,7 @@ jobs:
       # CPU ONLY IMAGE - based on default jupyterhub docker stacks
       - name: Extract metadata for pipeline-base
         id: meta-base
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v5
         with:
           # list of Docker images to use as base name for tags
           images: |
@@ -116,7 +116,7 @@ jobs:
 
       - name: Extract metadata for pipeline-gpu
         id: meta-gpu
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v5
         with:
           # list of Docker images to use as base name for tags
           images: |
@@ -145,7 +145,7 @@ jobs:
 
       - name: Extract metadata for pipeline-ml
         id: meta-ml
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v5
         with:
           images: ghcr.io/auscalabledronecloud/pipeline-ml
           tags: |
