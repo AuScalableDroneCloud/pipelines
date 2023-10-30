@@ -20,6 +20,7 @@ wget ${SRC}base-notebook/jupyter_server_config.py -O base-notebook/jupyter_serve
 wget ${SRC}base-notebook/start-notebook.sh -O base-notebook/start-notebook.sh
 wget ${SRC}base-notebook/start-notebook.sh -O base-notebook/start-notebook.py
 wget ${SRC}base-notebook/start-singleuser.sh -O base-notebook/start-singleuser.sh
+wget ${SRC}base-notebook/start-singleuser.sh -O base-notebook/start-singleuser.py
 
 rm -rf minimal-notebook
 mkdir -p minimal-notebook/setup-scripts
