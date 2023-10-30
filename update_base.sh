@@ -18,6 +18,7 @@ wget ${SRC}base-notebook/Dockerfile -O base-notebook/Dockerfile
 wget ${SRC}base-notebook/docker_healthcheck.py -O base-notebook/docker_healthcheck.py
 wget ${SRC}base-notebook/jupyter_server_config.py -O base-notebook/jupyter_server_config.py
 wget ${SRC}base-notebook/start-notebook.sh -O base-notebook/start-notebook.sh
+wget ${SRC}base-notebook/start-notebook.sh -O base-notebook/start-notebook.py
 wget ${SRC}base-notebook/start-singleuser.sh -O base-notebook/start-singleuser.sh
 
 rm -rf minimal-notebook
