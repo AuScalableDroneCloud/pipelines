@@ -17,3 +17,4 @@ dependencies:
     - python-dotenv
     - jupyter-server-proxy
     - git+https://github.com/AuScalableDroneCloud/asdc_python
+    - git+https://github.com/AuScalableDroneCloud/nbgitpuller
