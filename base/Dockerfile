@@ -9,7 +9,7 @@ RUN chmod +x /usr/local/bin/start*.sh
 # https://odmax.readthedocs.io/en/latest/installation.html
 RUN apt-get update --yes && \
     apt-get install --yes --no-install-recommends \
-    libimage-exiftool-perl libgeos-dev libgdal-dev gdal-bin build-essential && \
+    libimage-exiftool-perl libgeos-dev libgdal-dev gdal-bin build-essential rclone && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 USER ${NB_UID}
