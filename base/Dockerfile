@@ -1,4 +1,4 @@
-ARG BASE_CONTAINER=jupyter/minimal-notebook:hub-3.0.0
+ARG BASE_CONTAINER=quay.io/jupyter/minimal-notebook:2023-11-21
 FROM $BASE_CONTAINER
 
 #Fix permissions
