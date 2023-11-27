@@ -135,7 +135,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           build-args: |
-            BASE_CONTAINER=minimal-notebook
+            BASE_CONTAINER=quay.io/jupyter/minimal-notebook
           context: ./base
           push: true
           tags: |
