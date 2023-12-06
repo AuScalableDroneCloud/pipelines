@@ -1,5 +1,6 @@
 ARG BASE_CONTAINER=quay.io/jupyter/minimal-notebook:2023-11-21
 FROM $BASE_CONTAINER
+ARG GPU=false
 
 #Fix permissions
 USER root
@@ -9,9 +10,7 @@ RUN chmod +x /usr/local/bin/start*.sh
 # https://odmax.readthedocs.io/en/latest/installation.html
 RUN apt-get update --yes && \
     apt-get install --yes --no-install-recommends \
-    libimage-exiftool-perl libgeos-dev libgdal-dev gdal-bin build-essential rclone && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-
+    libimage-exiftool-perl libgeos-dev libgdal-dev gdal-bin build-essential rclone
 USER ${NB_UID}
 
 # Install python packages
@@ -36,4 +35,18 @@ RUN conda create --yes -n Python3.9 python=3.9 && \
     mamba env update -n Python3.9 --file environment.yml
 
 ENV CONDA_DEFAULT_ENV base
+
+# Install Pyenv
+RUN curl https://pyenv.run | bash
+ENV PATH="/home/${NB_USER}/.pyenv/bin:$PATH"
+RUN echo 'eval "$(pyenv init --path)"' >> /home/${NB_USER}/.bashrc
+RUN echo 'eval "$(pyenv virtualenv-init -)"' >> /home/${NB_USER}/.bashrc
+
+# Nvidia GPU support
+USER root
+RUN if [ "$GPU" = "true" ] ; then \
+        apt-get install -y nvidia-cuda-toolkit nvidia-headless-515 nvidia-utils-515; \
+    fi && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+USER ${NB_UID}
 
