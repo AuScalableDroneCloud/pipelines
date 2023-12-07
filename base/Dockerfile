@@ -41,12 +41,3 @@ RUN curl https://pyenv.run | bash
 ENV PATH="/home/${NB_USER}/.pyenv/bin:$PATH"
 RUN echo 'eval "$(pyenv init --path)"' >> /home/${NB_USER}/.bashrc
 RUN echo 'eval "$(pyenv virtualenv-init -)"' >> /home/${NB_USER}/.bashrc
-
-# Nvidia GPU support
-USER root
-RUN if [ "$GPU" = "true" ] ; then \
-        apt-get install -y nvidia-cuda-toolkit nvidia-headless-515 nvidia-utils-515; \
-    fi && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-USER ${NB_UID}
-
