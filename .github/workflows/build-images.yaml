@@ -136,6 +136,7 @@ jobs:
         with:
           build-args: |
             BASE_CONTAINER=quay.io/jupyter/minimal-notebook
+            GPU=true
           context: ./base
           push: true
           tags: |
