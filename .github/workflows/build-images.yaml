@@ -38,9 +38,9 @@ jobs:
         with:
           submodules: 'recursive'
 
-      # - name: update-base
-      #   run: ./update_base.sh
-      #   shell: bash
+      - name: update-base
+        run: ./update_base.sh
+        shell: bash
 
       - name: Add SHORT_SHA env property with commit short sha
         run: echo "SHORT_SHA=`git rev-parse --short HEAD`" >> $GITHUB_ENV

@@ -8,26 +8,28 @@
 #CUDA_IMAGE=cuda:11.8.0-cudnn8-runtime-ubuntu22.04
 CUDA_IMAGE=cuda:11.7.1-cudnn8-runtime-ubuntu22.04
 #CUDA_IMAGE=cuda:11.2.2-cudnn8-runtime-ubuntu20.04
+IMAGE_BASE_DIR=docker-stacks-main/images
 
 sed -i "s/ROOT_CONTAINER=nvidia.*/ROOT_CONTAINER=nvidia\/${CUDA_IMAGE}/g" .github/workflows/build-images.yaml
 
 ROOT=nvidia/${CUDA_IMAGE}
 #ROOT=ubuntu:22.04
 
-cd docker-stacks-foundation
+pushd ${IMAGE_BASE_DIR}/docker-stacks-foundation
 docker build -t docker-stacks-foundation --build-arg ROOT_CONTAINER=${ROOT} -f Dockerfile .
-cd ..
+popd
 
-cd base-notebook
+pushd ${IMAGE_BASE_DIR}/base-notebook
 docker build -t base-notebook --build-arg BASE_CONTAINER=docker-stacks-foundation -f Dockerfile .
-cd ..
+popd
 
-cd minimal-notebook
+pushd ${IMAGE_BASE_DIR}/minimal-notebook
 docker build -t minimal-notebook --build-arg BASE_CONTAINER=base-notebook -f Dockerfile .
-cd ..
+popd
 
-cd base
+pushd base
 docker build -t pipeline-base --build-arg BASE_CONTAINER=minimal-notebook -f Dockerfile .
+popd
 
 #TEST
 #docker run -p 8888:8888 pipeline-base
