@@ -35,9 +35,3 @@ RUN conda create --yes -n Python3.9 python=3.9 && \
     mamba env update -n Python3.9 --file environment.yml
 
 ENV CONDA_DEFAULT_ENV base
-
-# Install Pyenv
-RUN curl https://pyenv.run | bash
-ENV PATH="/home/${NB_USER}/.pyenv/bin:$PATH"
-RUN echo 'eval "$(pyenv init --path)"' >> /home/${NB_USER}/.bashrc
-RUN echo 'eval "$(pyenv virtualenv-init -)"' >> /home/${NB_USER}/.bashrc
