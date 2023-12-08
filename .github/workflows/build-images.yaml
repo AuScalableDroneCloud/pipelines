@@ -58,32 +58,14 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       # Intermediate images used as base images
-      - name: Build docker-stacks-foundation image
+      - name: Build minimal-notebook:gpu image
         uses: docker/build-push-action@v5
         with:
           build-args: |
             ROOT_CONTAINER=nvidia/cuda:11.7.1-cudnn8-runtime-ubuntu22.04
-          context: ./docker-stacks-main/images/docker-stacks-foundation
-          push: false
-          tags: docker-stacks-foundation
-
-      - name: Build base-notebook image
-        uses: docker/build-push-action@v5
-        with:
-          build-args: |
-            BASE_CONTAINER=docker-stacks-foundation
-          context: ./docker-stacks-main/images/base-notebook
-          push: false
-          tags: base-notebook
-
-      - name: Build minimal-notebook image
-        uses: docker/build-push-action@v5
-        with:
-          build-args: |
-            BASE_CONTAINER=base-notebook
           context: ./docker-stacks-main/images/minimal-notebook
           push: false
-          tags: minimal-notebook
+          tags: minimal-notebook:gpu
 
       # Published pipeline images
       # CPU ONLY IMAGE - based on default jupyterhub docker stacks
@@ -135,7 +117,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           build-args: |
-            BASE_CONTAINER=docker-stacks-foundation
+            BASE_CONTAINER=minimal-notebook:gpu
             GPU=true
           context: ./base
           push: true
