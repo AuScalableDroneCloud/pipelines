@@ -10,7 +10,7 @@ RUN chmod +x /usr/local/bin/start*.sh
 # https://odmax.readthedocs.io/en/latest/installation.html
 RUN apt-get update --yes && \
     apt-get install --yes --no-install-recommends \
-    libimage-exiftool-perl libgeos-dev libgdal-dev gdal-bin build-essential rclone
+    libimage-exiftool-perl libgeos-dev libgdal-dev gdal-bin build-essential rclone git
 USER ${NB_UID}
 
 # Install python packages
