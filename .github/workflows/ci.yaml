@@ -1,0 +1,84 @@
+name: Create and publish Docker images
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [chris]
+
+jobs:
+  push_to_registry:
+    name: Build and push Docker image to GitHub Packages
+    runs-on: ubuntu-latest
+    steps:
+      #https://saturncloud.io/blog/github-action-ecr-optimizing-disk-space/#handling-or-maximizing-github-runner-out-of-disk-space-error
+      # Clean unnecessary files to save disk space
+      - name: clean unncessary files to save space
+        run: |
+          docker rmi `docker images -q`
+          sudo rm -rf /usr/share/dotnet /etc/mysql /etc/php /etc/sudo apt/sources.list.d
+          sudo apt -y autoremove --purge
+          sudo apt -y autoclean
+          sudo apt clean
+          rm --recursive --force "$AGENT_TOOLSDIRECTORY"
+          df -h
+
+      # Free up disk space on Ubuntu
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@main
+        with:
+          # This might remove tools that are actually needed, if set to "true" but frees about 6 GB
+          tool-cache: false
+          large-packages: true
+          swap-storage: true
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+
+      - name: update-base
+        run: ./update_base.sh
+        shell: bash
+
+      - name: Add SHORT_SHA env property with commit short sha
+        run: echo "SHORT_SHA=`git rev-parse --short HEAD`" >> $GITHUB_ENV
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver: docker # defaults to "docker-containerized"
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Intermediate images used as base images
+      - name: Build docker-stacks-foundation image
+        uses: docker/build-push-action@v5
+        with:
+          build-args: |
+            ROOT_CONTAINER=nvidia/cuda:11.7.1-cudnn8-runtime-ubuntu22.04
+          context: ./docker-stacks-foundation
+          push: false
+          tags: docker-stacks-foundation
+
+      - name: Build base-notebook image
+        uses: docker/build-push-action@v5
+        with:
+          build-args: |
+            BASE_CONTAINER=docker-stacks-foundation
+          context: ./base-notebook
+          push: false
+          tags: base-notebook
+
+      - name: Build minimal-notebook image
+        uses: docker/build-push-action@v5
+        with:
+          build-args: |
+            BASE_CONTAINER=base-notebook
+          context: ./minimal-notebook
+          push: false
+          tags: minimal-notebook
