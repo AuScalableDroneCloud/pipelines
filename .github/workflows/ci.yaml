@@ -1,4 +1,4 @@
-name: Create and publish Docker images
+name: Build Docker images
 
 on:
   workflow_dispatch:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   push_to_registry:
-    name: Build and push Docker image to GitHub Packages
+    name: Build Docker image
     runs-on: ubuntu-latest
     steps:
       #https://saturncloud.io/blog/github-action-ecr-optimizing-disk-space/#handling-or-maximizing-github-runner-out-of-disk-space-error
@@ -56,29 +56,37 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       # Intermediate images used as base images
-      - name: Build docker-stacks-foundation image
+      - name: Build minimal-notebook:gpu image
         uses: docker/build-push-action@v5
         with:
           build-args: |
             ROOT_CONTAINER=nvidia/cuda:11.7.1-cudnn8-runtime-ubuntu22.04
-          context: ./docker-stacks-foundation
+          context: ./docker-stacks-main/images/minimal-notebook
           push: false
-          tags: docker-stacks-foundation
+          tags: minimal-notebook:gpu
 
-      - name: Build base-notebook image
+      # Build images    
+
+      # Build Base image
+      - name: Build pipeline-base image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./base
+          push: false
+
+      # Build GPU image
+      - name: Build pipeline-gpu image
         uses: docker/build-push-action@v5
         with:
           build-args: |
-            BASE_CONTAINER=docker-stacks-foundation
-          context: ./base-notebook
+            BASE_CONTAINER=minimal-notebook:gpu
+            GPU=true
+          context: ./base
           push: false
-          tags: base-notebook
 
-      - name: Build minimal-notebook image
+      # Build ML image    
+      - name: Build pipeline-ml image
         uses: docker/build-push-action@v5
         with:
-          build-args: |
-            BASE_CONTAINER=base-notebook
-          context: ./minimal-notebook
+          context: ./ml
           push: false
-          tags: minimal-notebook
