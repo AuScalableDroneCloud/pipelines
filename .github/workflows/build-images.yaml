@@ -1,19 +1,121 @@
-name: Create and publish Docker images
+name: Build and publish pipeline images
 
 on:
   workflow_dispatch:
   push:
     branches: [main]
+  pull_request:
+    branches: ['*']
   release:
     types: [published]
-
 jobs:
-  push_to_registry:
-    name: Build and push Docker image to GitHub Packages
+  prepare:
+    name: Prepare the repository
     runs-on: ubuntu-latest
     steps:
-      #https://saturncloud.io/blog/github-action-ecr-optimizing-disk-space/#handling-or-maximizing-github-runner-out-of-disk-space-error
-      # Clean unnecessary files to save disk space
+      #
+      # ---- Prepare the repository ----
+      #
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+
+      # Downloads the latest docker-stacks source
+      - name: update-base
+        run: ./update_base.sh 
+        shell: bash
+
+      # Store the repository as an artifact
+      - name: Upload repository as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: repo
+          path: ./
+
+  get-metadata:
+    name: Extract the metadata
+    runs-on: ubuntu-latest
+    needs: prepare
+    steps:
+      # Fetch repo
+      - name: Download repository from artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: repo
+
+      # Get the SHA for the current commit
+      - name: Add SHORT_SHA env property with commit short sha
+        run: echo "SHORT_SHA=`git rev-parse --short HEAD`" >> $GITHUB_ENV
+
+      #
+      # ---- Extract metadata for docker labels/tags  ---
+      #
+
+      - name: Extract metadata for pipeline-base
+        id: meta-base
+        uses: docker/metadata-action@v5
+        with:
+          # list of Docker images to use as base name for tags
+          images: |
+            ghcr.io/auscalabledronecloud/pipeline-base
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=tag
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha
+            ${{ env.SHORT_SHA }}-${{ github.run_number }}
+      
+      - name: Extract metadata for pipeline-gpu
+        id: meta-gpu
+        uses: docker/metadata-action@v5
+        with:
+          # list of Docker images to use as base name for tags
+          images: |
+            ghcr.io/auscalabledronecloud/pipeline-gpu
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=tag
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha
+            ${{ env.SHORT_SHA }}-${{ github.run_number }}
+
+      - name: Extract metadata for pipeline-ml
+        id: meta-ml
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/auscalabledronecloud/pipeline-ml
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=tag
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha
+            ${{ env.SHORT_SHA }}-${{ github.run_number }}
+  build:
+    name: Build and Publish
+    runs-on: ubuntu-latest
+    needs: get-metadata
+    steps:
+      # Fetch repo
+      - name: Download repository from artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: repo
+
+      #
+      # -- Clean up unnecessary files to save disk space --
+      #
+
+      # ref: https://saturncloud.io/blog/github-action-ecr-optimizing-disk-space/#handling-or-maximizing-github-runner-out-of-disk-space-error
       - name: clean unncessary files to save space
         run: |
           docker rmi `docker images -q`
@@ -33,18 +135,10 @@ jobs:
           large-packages: true
           swap-storage: true
 
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          submodules: 'recursive'
-
-      - name: update-base
-        run: ./update_base.sh
-        shell: bash
-
-      - name: Add SHORT_SHA env property with commit short sha
-        run: echo "SHORT_SHA=`git rev-parse --short HEAD`" >> $GITHUB_ENV
-
+      # 
+      # --- Prep for building and pushing images
+      #
+      
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
         with:
@@ -57,7 +151,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Intermediate images used as base images
+      # Build a minimal-notebook image from docker-stacks source, but use the nvidia/cuda image as the base
       - name: Build minimal-notebook:gpu image
         uses: docker/build-push-action@v5
         with:
@@ -67,86 +161,44 @@ jobs:
           push: false
           tags: minimal-notebook:gpu
 
-      # Published pipeline images
-      # CPU ONLY IMAGE - based on default jupyterhub docker stacks
-      - name: Extract metadata for pipeline-base
-        id: meta-base
-        uses: docker/metadata-action@v5
-        with:
-          # list of Docker images to use as base name for tags
-          images: |
-            ghcr.io/auscalabledronecloud/pipeline-base
-          tags: |
-            type=schedule
-            type=ref,event=branch
-            type=ref,event=tag
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=sha
-            ${{ env.SHORT_SHA }}-${{ github.run_number }}
+      #
+      # ---- Build and push images ---
+      #
 
-      - name: Build and push pipeline-base image
+      - name: Build and push (if merged) pipeline-base image
         uses: docker/build-push-action@v5
         with:
           context: ./base
-          push: true
+          push: ${{ github.ref == 'refs/heads/main' }} # Publish only if the branch is main
+          # Use the metadata from the previous step to tag the image
           tags: |
             ghcr.io/auscalabledronecloud/pipeline-base:latest
-            ${{ steps.meta-base.outputs.tags }}
-          labels: ${{ steps.meta-base.outputs.labels }}
+            ${{ needs.get-metadata.outputs['meta-base'].tags }}
+          # Use the metadata from the previous step to add labels to the image
 
-      - name: Extract metadata for pipeline-gpu
-        id: meta-gpu
-        uses: docker/metadata-action@v5
-        with:
-          # list of Docker images to use as base name for tags
-          images: |
-            ghcr.io/auscalabledronecloud/pipeline-gpu
-          tags: |
-            type=schedule
-            type=ref,event=branch
-            type=ref,event=tag
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=sha
-            ${{ env.SHORT_SHA }}-${{ github.run_number }}
+          labels: ${{ needs.get-metadata.outputs['meta-base'].lables }}
 
-      - name: Build and push pipeline-gpu image
+      - name: Build and push (if merged) pipeline-gpu image
         uses: docker/build-push-action@v5
         with:
           build-args: |
             BASE_CONTAINER=minimal-notebook:gpu
             GPU=true
           context: ./base
-          push: true
+          push: ${{ github.ref == 'refs/heads/main' }} # Publish only if the branch is main
           tags: |
             ghcr.io/auscalabledronecloud/pipeline-gpu:latest
-            ${{ steps.meta-gpu.outputs.tags }}
-          labels: ${{ steps.meta-base.outputs.labels }}
+            ${{ needs.get-metadata.outputs['meta-gpu'].tags }}
+          labels: ${{ needs.get-metadata.outputs['meta-gpu'].labels }}
 
-      - name: Extract metadata for pipeline-ml
-        id: meta-ml
-        uses: docker/metadata-action@v5
-        with:
-          images: ghcr.io/auscalabledronecloud/pipeline-ml
-          tags: |
-            type=schedule
-            type=ref,event=branch
-            type=ref,event=tag
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=sha
-            ${{ env.SHORT_SHA }}-${{ github.run_number }}
-
-      - name: Build and push pipeline-ml image
+      - name: Build and push (if merged) pipeline-ml image
         uses: docker/build-push-action@v5
         with:
+          build-args: |
+            BASE_CONTAINER=ghcr.io/auscalabledronecloud/pipeline-gpu:latest
           context: ./ml
-          push: true
+          push: ${{ github.ref == 'refs/heads/main' }} # Publish only if the branch is main
           tags: |
             ghcr.io/auscalabledronecloud/pipeline-ml:latest
-            ${{ steps.meta-ml.outputs.tags }}
-          labels: ${{ steps.meta-ml.outputs.labels }}
+            ${{ needs.get-metadata.outputs['meta-ml'].tags }}
+          labels: ${{ needs.get-metadata.outputs['meta-ml'].labels }}
