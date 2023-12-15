@@ -34,4 +34,6 @@ RUN conda create --yes -n Python3.8 python=3.8 && \
 RUN conda create --yes -n Python3.9 python=3.9 && \
     mamba env update -n Python3.9 --file environment.yml
 
+RUN conda init
+
 ENV CONDA_DEFAULT_ENV base
