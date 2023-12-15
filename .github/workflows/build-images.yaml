@@ -150,13 +150,22 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      
+
+      # Build a minimal-notebook image from docker-stacks source, but use the nvidia/cuda image as the base
+      - name: Build minimal-notebook:gpu image
+        uses: docker/build-push-action@v5
+        with:
+          build-args: |
+            ROOT_CONTAINER=nvidia/cuda:11.7.1-cudnn8-runtime-ubuntu22.04
+          context: ./docker-stacks-main/images/minimal-notebook
+          push: false
+          tags: minimal-notebook:gpu
 
       #
       # ---- Build and push images ---
       #
 
-      - name: Build and push pipeline-base image
+      - name: Build and push (if merged) pipeline-base image
         uses: docker/build-push-action@v5
         with:
           context: ./base
@@ -169,7 +178,7 @@ jobs:
 
           labels: ${{ needs.get-metadata.outputs['meta-base'].lables }}
 
-      - name: Build and push pipeline-gpu image
+      - name: Build and push (if merged) pipeline-gpu image
         uses: docker/build-push-action@v5
         with:
           build-args: |
@@ -182,9 +191,11 @@ jobs:
             ${{ needs.get-metadata.outputs['meta-gpu'].tags }}
           labels: ${{ needs.get-metadata.outputs['meta-gpu'].labels }}
 
-      - name: Build and push pipeline-ml image
+      - name: Build and push (if merged) pipeline-ml image
         uses: docker/build-push-action@v5
         with:
+          build-args: |
+            BASE_CONTAINER=ghcr.io/auscalabledronecloud/pipeline-gpu:latest
           context: ./ml
           push: ${{ github.ref == 'refs/heads/main' }} # Publish only if the branch is main
           tags: |
